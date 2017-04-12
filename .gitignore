@@ -1,0 +1,62 @@
+# OSX Noise
+.DS_Store
+
+# TextMate
+*.tmproj
+tmtags
+
+# XCode (and ancestors) per-user config (very noisy, and not relevant)
+*.mode1
+*.mode1v3
+*.mode2v3
+*.perspective
+*.perspectivev3
+*.pbxuser
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+xcuserdata
+
+# build products
+build/
+# *.[oa]
+
+# deliver
+*.itmsp
+
+# Other source repository archive directories (protects when importing)
+..hg
+..svn
+
+# Vim
+*.swp
+
+# Rails 3
+..bundle
+db/*.sqlite3
+log/*.log
+tmp/**/*
+public/system/*
+
+# Google Android
+..metadata
+tmp/**
+*.tmp
+*.bak
+tmp/**/*
+*.swp
+*~.nib
+*~
+*.apk
+bin
+gen
+local.properties
+*.jar
+
+.irb-history
+archive
+sonar-reports
+compile_commands.json
+
+reports/*
+.idea/*
