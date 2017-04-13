@@ -11,3 +11,11 @@ You are invited to create a PR or suggest ideas as issues to improve this projec
 # License
 
 MIT License see [LICENSE.md](LICENSE.md).
+
+# Other Projects
+
+Other interesting projects that try to solve the routing problem:
+
+* [https://github.com/backchannel/BackchannelSDK-iOS](https://github.com/backchannel/BackchannelSDK-iOS)
+* [https://github.com/michalciurus/KatanaRouter](https://github.com/michalciurus/KatanaRouter)
+* [https://github.com/ReSwift/ReSwift-Router](https://github.com/ReSwift/ReSwift-Router)
