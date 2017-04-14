@@ -124,6 +124,8 @@ extension NavigationControllerWireframe: UINavigationControllerDelegate {
 			dispatch(UIKitNavigationCommand.uikitDidChangeNavigationState(previousNavigationState: lastNavigationState))
 		}
 
+		assert(childWireframes.count >= navigationController.viewControllers.count, "always use NavigationCommands instead of directly pushing/popping")
+
 		// mark ALL childWireframes with wasShown, as when showing several wireframes at once, the ones in between have already been correctly added to the childWireframes array
 		childWireframes.forEach({ $0.wasShown = true })
 	}

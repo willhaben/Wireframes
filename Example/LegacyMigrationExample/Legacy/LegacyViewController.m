@@ -58,6 +58,10 @@
 					[legacyViewController configure];
 				}];
 			}],
+			[self createButtonWithTitle:@"push illegal" action:^(UIButton *button){
+				UIViewController *vc = [[LegacyViewController alloc] init];
+				[self.navigationController pushViewController:vc animated:true];
+			}],
 	];
 }
 
