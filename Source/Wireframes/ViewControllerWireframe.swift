@@ -63,7 +63,7 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 
 }
 
-public extension ViewControllerWireframe {
+private extension ViewControllerWireframe {
 
 	func presentWireframe(_ wireframe: ViewControllerWireframeInterface, modalPresentationStyle: ModalPresentationStyle, modalTransitionStyle: ModalTransitionStyle, animated: Bool) {
 		guard presentedWireframe == nil else {
