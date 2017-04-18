@@ -47,6 +47,7 @@ public enum ModalTransitionStyle {
 	}
 }
 
+// used as a workaround for navigation state changing actions by UIKit which are not initiated by dispatching NavigationCommands, e.g. back button/swipe or switching tabs
 public enum UIKitNavigationCommand: NavigationCommand {
 	case uikitDidChangeNavigationState(previousNavigationState: NavigationStateInterface)
 }
