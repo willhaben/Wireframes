@@ -100,9 +100,24 @@ extension NavigationControllerWireframe: UINavigationControllerDelegate {
 	public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
 		// navigationController.viewControllers already represents the stack AFTER showing the viewController
 		// notice that this delegate method is called even when an interactive movement (back swipe) is started, and later aborted - should rather be called `mightShow viewController`
+		if let transitionCoordinator = navigationController.transitionCoordinator, transitionCoordinator.initiallyInteractive {
+			// interactive transition active => we need to wait until we are sure it's not cancelled
+			transitionCoordinator.notifyWhenInteractionEnds({ [weak self] context in
+				if context.isCancelled {
+					// interaction cancelled => nothing to do
+				}
+				else {
+					self?.repairChildWireframes(forViewControllerThatWillBeShown: viewController)
+				}
+			})
+		}
+		else {
+			repairChildWireframes(forViewControllerThatWillBeShown: viewController)
+		}
+
 	}
 
-	public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+	private func repairChildWireframes(forViewControllerThatWillBeShown viewController: UIViewController) {
 		// NOTE: when the system back button/swipe or is used, or an already active tab item is clicked, we need to correctly update childWireframes
 
 		// we know that such a user action has happened when the navigationController.viewControllers array does not match the childWireframes array
@@ -128,6 +143,9 @@ extension NavigationControllerWireframe: UINavigationControllerDelegate {
 
 		// mark ALL childWireframes with wasShown, as when showing several wireframes at once, the ones in between have already been correctly added to the childWireframes array
 		childWireframes.forEach({ $0.wasShown = true })
+	}
+
+	public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
 	}
 
 }
