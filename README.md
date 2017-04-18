@@ -17,5 +17,6 @@ MIT License see [LICENSE.md](LICENSE.md).
 Other interesting projects that try to solve the routing problem:
 
 * [https://github.com/backchannel/BackchannelSDK-iOS](https://github.com/backchannel/BackchannelSDK-iOS)
+* [https://github.com/willowtreeapps/cordux](https://github.com/willowtreeapps/cordux)
 * [https://github.com/michalciurus/KatanaRouter](https://github.com/michalciurus/KatanaRouter)
 * [https://github.com/ReSwift/ReSwift-Router](https://github.com/ReSwift/ReSwift-Router)
