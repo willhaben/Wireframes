@@ -145,7 +145,4 @@ extension NavigationControllerWireframe: UINavigationControllerDelegate {
 		childWireframes.forEach({ $0.wasShown = true })
 	}
 
-	public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-	}
-
 }
