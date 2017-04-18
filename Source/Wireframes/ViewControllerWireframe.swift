@@ -41,6 +41,10 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 					// dismissal should be carried out by presenting wireframe, so it can properly clear its presentedWireframe property => bubble up
 					return false
 				}
+				guard wireframe === presentedWireframe else {
+					// dismissal should be carried out by presenting wireframe => bubble up/down
+					return false
+				}
 
 				dismissWireframe(wireframe, animated: animated)
 			case .popoverWasDismissedByUserTappingOutside(let wireframe):
