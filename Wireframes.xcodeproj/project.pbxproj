@@ -16,6 +16,7 @@
 		1FFDDDAC1E9224F40003E8C4 /* TabBarControllerWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFDDD971E9224F40003E8C4 /* TabBarControllerWireframe.swift */; };
 		1FFDDDAD1E9224F40003E8C4 /* ViewControllerWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFDDD981E9224F40003E8C4 /* ViewControllerWireframe.swift */; };
 		1FFDDDAE1E9224F40003E8C4 /* WireframeProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFDDD991E9224F40003E8C4 /* WireframeProtocols.swift */; };
+		B4D89F04CA6C3110FFECDF78 /* WireframeProtocolsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D89F8399437C1F82490536 /* WireframeProtocolsExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +42,7 @@
 		1FFDDD971E9224F40003E8C4 /* TabBarControllerWireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarControllerWireframe.swift; sourceTree = "<group>"; };
 		1FFDDD981E9224F40003E8C4 /* ViewControllerWireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerWireframe.swift; sourceTree = "<group>"; };
 		1FFDDD991E9224F40003E8C4 /* WireframeProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WireframeProtocols.swift; sourceTree = "<group>"; };
+		B4D89F8399437C1F82490536 /* WireframeProtocolsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WireframeProtocolsExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 				1FFDDD971E9224F40003E8C4 /* TabBarControllerWireframe.swift */,
 				1FFDDD981E9224F40003E8C4 /* ViewControllerWireframe.swift */,
 				1FFDDD991E9224F40003E8C4 /* WireframeProtocols.swift */,
+				B4D89F8399437C1F82490536 /* WireframeProtocolsExtensions.swift */,
 			);
 			name = DefaultWireframes;
 			path = Wireframes;
@@ -245,6 +248,7 @@
 				1FFDDDAE1E9224F40003E8C4 /* WireframeProtocols.swift in Sources */,
 				1FFDDDA41E9224F40003E8C4 /* NavigationCommand.swift in Sources */,
 				1FFDDDAB1E9224F40003E8C4 /* NavigationControllerWireframe.swift in Sources */,
+				B4D89F04CA6C3110FFECDF78 /* WireframeProtocolsExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

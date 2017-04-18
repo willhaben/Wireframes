@@ -118,7 +118,7 @@ extension NavigationControllerWireframe: UINavigationControllerDelegate {
 	}
 
 	private func repairChildWireframes(forViewControllerThatWillBeShown viewController: UIViewController) {
-		// NOTE: when the system back button/swipe or is used, or an already active tab item is clicked, we need to correctly update childWireframes
+		// NOTE: when the system back button/swipe is used, or an already active tab item is clicked, we need to correctly update childWireframes
 
 		// we know that such a user action has happened when the navigationController.viewControllers array does not match the childWireframes array
 		let childWireframesOutOfSync = navigationController.viewControllers != Array(childWireframes.map({ $0.viewController }))
