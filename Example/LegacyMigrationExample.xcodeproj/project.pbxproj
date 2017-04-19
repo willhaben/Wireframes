@@ -103,7 +103,10 @@
 				1F48D7AD1E7AE01600003BED /* Products */,
 				1FFDDD781E9223DA0003E8C4 /* Frameworks */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		1F48D7AD1E7AE01600003BED /* Products */ = {
 			isa = PBXGroup;

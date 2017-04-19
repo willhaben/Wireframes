@@ -71,7 +71,10 @@
 				1FFDDD6B1E9223830003E8C4 /* Tests */,
 				1FFDDD5F1E9223830003E8C4 /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		1FFDDD5F1E9223830003E8C4 /* Products */ = {
 			isa = PBXGroup;
