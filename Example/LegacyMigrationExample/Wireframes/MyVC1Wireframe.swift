@@ -21,6 +21,11 @@ class MyVCWireframe: ViewControllerWireframe {
 		dispatch(NavigationControllerNavigationCommand.replaceStack(wireframes: wireframes, animated: true))
 	}
 
+	func pushFromRoot(title: String) {
+		let nextWF = WireframeFactory.createMyVCWireframe(title: title, configuration: { _ in })
+		dispatch(NavigationControllerNavigationCommand.pushFromFirstChild(wireframe: nextWF, animated: true))
+	}
+
 	func presentSomethingFullscreen(title: String) {
 		let nextWF = WireframeFactory.createMyVCWireframe(title: title, configuration: { _ in })
 		dispatch(PresentationControllerNavigationCommand.present(wireframe: nextWF, modalPresentationStyle: .fullScreen, modalTransitionStyle: .coverVertical, animated: true))

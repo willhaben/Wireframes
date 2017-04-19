@@ -73,6 +73,7 @@ class MyVC: UIViewController, Navigatable {
 				createButton(title: "push", action: { [weak self] _ in self?.wireframe?.pushSomething(title: (self?.navigationItem.title ?? "") + ".1") }),
 				createButton(title: "pop", action: { [weak self] _ in self?.wireframe?.popMe() }),
 				createButton(title: "replace stack", action: { [weak self] _ in self?.wireframe?.replaceStack(baseTitle: (self?.navigationItem.title ?? "") + "!") }),
+				createButton(title: "push from root", action: { [weak self] _ in self?.wireframe?.pushFromRoot(title: (self?.navigationItem.title ?? "") + ".1") }),
 				createButton(title: "present fullscreen", action: { [weak self] _ in self?.wireframe?.presentSomethingFullscreen(title: (self?.navigationItem.title ?? "") + ".1") }),
 				createButton(title: "present popover", action: { [weak self] sender in self?.wireframe?.presentSomethingPopover(title: (self?.navigationItem.title ?? "") + ".1", sourceView: sender) }),
 				createButton(title: "dismiss", action: { [weak self] _ in self?.wireframe?.dismiss() }),

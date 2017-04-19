@@ -64,7 +64,9 @@ public enum PresentationControllerNavigationCommand: NavigationCommand {
 
 public enum NavigationControllerNavigationCommand: NavigationCommand {
 	case push(wireframe: ViewControllerWireframeInterface, animated: Bool)
+	case pushFromFirstChild(wireframe: ViewControllerWireframeInterface, animated: Bool)
 	case pop(wireframe: ViewControllerWireframeInterface, animated: Bool)
+	case popToFirstChild(animated: Bool)
 	case replaceStack(wireframes: [ViewControllerWireframeInterface], animated: Bool)
 }
 

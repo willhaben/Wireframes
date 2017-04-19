@@ -63,9 +63,24 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 				case .push(let wireframe, let animated):
 					assert(!(wireframe is NavigationControllerWireframeInterface))
 					pushWireframe(wireframe, animated: animated)
+				case .pushFromFirstChild(let wireframe, let animated):
+					assert(!(wireframe is NavigationControllerWireframeInterface))
+					guard let first = childWireframes.first else {
+						assertionFailure()
+						return true
+					}
+
+					setChildWireframes([first, wireframe], animated: animated)
 				case .pop(let wireframe, let animated):
 					assert(!(wireframe is NavigationControllerWireframeInterface))
 					popWireframe(wireframe, animated: animated)
+				case .popToFirstChild(let animated):
+					guard let first = childWireframes.first else {
+						assertionFailure()
+						return true
+					}
+
+					setChildWireframes([first], animated: animated)
 				case .replaceStack(let wireframes, let animated):
 					assert(!wireframes.contains(where: { $0 is NavigationControllerWireframeInterface }))
 					setChildWireframes(wireframes, animated: animated)
