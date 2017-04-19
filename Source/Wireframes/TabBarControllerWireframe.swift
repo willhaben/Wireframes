@@ -18,6 +18,10 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 		return childWireframesAndTags[index].0
 	}
 
+	public var isPresenting: Bool {
+		return false
+	}
+
 	public var viewController: UIViewController {
 		return tabBarController
 	}

@@ -45,6 +45,14 @@ class MyVCWireframe: ViewControllerWireframe {
 		dispatch(PresentationControllerNavigationCommand.dismiss(wireframe: self, animated: true))
 	}
 
+	func dismissGlobally() {
+		let navChain = AnyNavigationCommandChain(navigationCommands: [
+				KeyboardDismissNavigationCommand.dismissKeyboard,
+				GlobalPresentationControllerNavigationCommand.dismissAnythingIfPresented(animated: true)
+		])
+		AppDelegate.shared.rootWireframe.dispatch(navChain)
+	}
+
 	func dismissKeyboard() {
 		AppDelegate.shared.rootWireframe.dispatch(KeyboardDismissNavigationCommand.dismissKeyboard)
 	}

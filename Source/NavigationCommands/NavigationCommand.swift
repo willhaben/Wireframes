@@ -62,6 +62,10 @@ public enum PresentationControllerNavigationCommand: NavigationCommand {
 	case popoverWasDismissedByUserTappingOutside(wireframe: ViewControllerWireframeInterface)
 }
 
+public enum GlobalPresentationControllerNavigationCommand: NavigationCommand {
+	case dismissAnythingIfPresented(animated: Bool)
+}
+
 public enum NavigationControllerNavigationCommand: NavigationCommand {
 	case push(wireframe: ViewControllerWireframeInterface, animated: Bool)
 	case pushFromFirstChild(wireframe: ViewControllerWireframeInterface, animated: Bool)

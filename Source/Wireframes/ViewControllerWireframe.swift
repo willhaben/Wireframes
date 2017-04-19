@@ -8,6 +8,10 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 		return presentedWireframe
 	}
 
+	public var isPresenting: Bool {
+		return presentedWireframe != nil
+	}
+
 	let _viewController: UIViewController
 	public var viewController: UIViewController {
 		return _viewController

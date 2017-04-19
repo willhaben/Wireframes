@@ -12,6 +12,8 @@ public protocol WireframeInterface: class {
 	weak var parentWireframe: WireframeInterface? { get set }
 	var currentlyActiveChildWireframe: WireframeInterface? { get }
 
+	var isPresenting: Bool { get }
+
 	// unfortunately we need to give access to contained viewController
 	var viewController: UIViewController { get }
 

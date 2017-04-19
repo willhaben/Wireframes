@@ -89,16 +89,34 @@ public extension WireframeInterface {
 	}
 
 	private func globallyHandle(_ navigationCommand: NavigationCommand) -> Bool {
-		guard let navigationCommand = navigationCommand as? KeyboardDismissNavigationCommand else {
-			return false
+		if let navigationCommand = navigationCommand as? KeyboardDismissNavigationCommand {
+			switch navigationCommand {
+				case .dismissKeyboard:
+					UIResponder.wf_resignFirstResponder()
+			}
+			return true
 		}
 
-		switch navigationCommand {
-			case .dismissKeyboard:
-				UIResponder.wf_resignFirstResponder()
+		if let navigationCommand = navigationCommand as? GlobalPresentationControllerNavigationCommand {
+			switch navigationCommand {
+				case .dismissAnythingIfPresented(let animated):
+					let relativeRootPresentingOptional = leafChildWireframe().parentWireframeSequence().reversed().first(where: { $0.isPresenting })
+					let globalActiveRootPresentingOptional = rootParentWireframe().currentlyActiveChildWireframeSequence().first(where: { $0.isPresenting })
+					assert(relativeRootPresentingOptional === globalActiveRootPresentingOptional, "currently not supported")
+					guard let relativeRootPresenting = relativeRootPresentingOptional else {
+						// nothing presented => nothing to dismiss
+						return true
+					}
+					guard let presentedWireframe = relativeRootPresenting.currentlyActiveChildWireframe as? ViewControllerWireframeInterface else {
+						assertionFailure()
+						return true
+					}
+					_ = relativeRootPresenting.handle(PresentationControllerNavigationCommand.dismiss(wireframe: presentedWireframe, animated: animated))
+			}
+			return true
 		}
 
-		return true
+		return false
 	}
 
 	private func notifyNewCurrentChildOfNavigation(_ navigation: () -> Void) {
@@ -116,8 +134,18 @@ public extension WireframeInterface {
 	}
 
 	private func globalCurrentlyActiveChildWireframeLeaf() -> WireframeInterface {
+		let rootParent = rootParentWireframe()
+		let leafChild = rootParent.leafChildWireframe()
+		return leafChild
+	}
+
+	private func rootParentWireframe() -> WireframeInterface {
 		let rootParent = Array(parentWireframeSequence()).last ?? self
-		let leafChild = Array(rootParent.currentlyActiveChildWireframeSequence()).last ?? self
+		return rootParent
+	}
+
+	private func leafChildWireframe() -> WireframeInterface {
+		let leafChild = Array(currentlyActiveChildWireframeSequence()).last ?? self
 		return leafChild
 	}
 

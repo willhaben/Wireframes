@@ -1,6 +1,21 @@
 import Wireframes
 
 
+struct AnyNavigationCommandChain: NavigationCommandChain {
+
+	let navigationCommands: [NavigationCommand]
+
+	init(navigationCommands: [NavigationCommand]) {
+		self.navigationCommands = navigationCommands
+	}
+
+	func navigationCommandSequence() -> NavigationCommandSequence {
+		return NavigationCommandSequence(navigationCommands)
+	}
+
+}
+
+
 struct PushSwitchPushCommandChain: NavigationCommandChain {
 
 	func navigationCommandSequence() -> NavigationCommandSequence {
