@@ -1,4 +1,6 @@
 import Foundation
+import UIKit
+
 
 private enum BubbleDirection {
     case up
@@ -60,7 +62,8 @@ public extension WireframeInterface {
 
     private func handle(_ navigationCommandSequence: NavigationCommandSequence, bubbleRemaining bubbleDirection: BubbleDirection) {
         let remainingNavigationCommandSequence = navigationCommandSequence.drop(while: { navigationCommand in
-            return handle(navigationCommand)
+	        // some navigation commands don't need a wireframe to be handled => globallyHandle
+            return globallyHandle(navigationCommand) || handle(navigationCommand)
         })
 
         // workaround, as isEmpty is not defined on Sequence but rather on Collection
@@ -85,7 +88,20 @@ public extension WireframeInterface {
         }
     }
 
-    private func notifyNewCurrentChildOfNavigation(_ navigation: () -> Void) {
+	private func globallyHandle(_ navigationCommand: NavigationCommand) -> Bool {
+		guard let navigationCommand = navigationCommand as? KeyboardDismissNavigationCommand else {
+			return false
+		}
+
+		switch navigationCommand {
+			case .dismissKeyboard:
+				UIResponder.wf_resignFirstResponder()
+		}
+
+		return true
+	}
+
+	private func notifyNewCurrentChildOfNavigation(_ navigation: () -> Void) {
         let navigationStateBefore = currentNavigationState()
         navigation()
         let navigationStateAfter = currentNavigationState()

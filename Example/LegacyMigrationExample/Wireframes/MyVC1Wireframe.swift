@@ -40,6 +40,10 @@ class MyVCWireframe: ViewControllerWireframe {
 		dispatch(PresentationControllerNavigationCommand.dismiss(wireframe: self, animated: true))
 	}
 
+	func dismissKeyboard() {
+		AppDelegate.shared.rootWireframe.dispatch(KeyboardDismissNavigationCommand.dismissKeyboard)
+	}
+
 	func switchTab() {
 		dispatch(TabBarControllerNavigationCommand.switchTab(toWireframeWithTag: RootTabWireframeTag.second))
 	}

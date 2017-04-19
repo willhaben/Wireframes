@@ -52,6 +52,10 @@ public enum UIKitNavigationCommand: NavigationCommand {
 	case uikitDidChangeNavigationState(previousNavigationState: NavigationStateInterface)
 }
 
+public enum KeyboardDismissNavigationCommand: NavigationCommand {
+	case dismissKeyboard
+}
+
 public enum PresentationControllerNavigationCommand: NavigationCommand {
 	case present(wireframe: ViewControllerWireframeInterface, modalPresentationStyle: ModalPresentationStyle, modalTransitionStyle: ModalTransitionStyle, animated: Bool)
 	case dismiss(wireframe: ViewControllerWireframeInterface, animated: Bool)

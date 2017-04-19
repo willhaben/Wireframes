@@ -50,8 +50,7 @@ class MyVC: UIViewController, Navigatable {
 		let stackView = UIStackView(arrangedSubviews: createSubviews())
 		stackView.axis = .vertical
 		stackView.alignment = .fill
-		stackView.distribution = .equalSpacing
-		stackView.spacing = 10
+		stackView.distribution = .fillProportionally
 		view.addSubview(stackView)
 
 		stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -71,19 +70,20 @@ class MyVC: UIViewController, Navigatable {
 
 	private func createSubviews() -> [UIView] {
 		return [
-				createLabel(title: navigationItem.title),
 				createButton(title: "push", action: { [weak self] _ in self?.wireframe?.pushSomething(title: (self?.navigationItem.title ?? "") + ".1") }),
 				createButton(title: "pop", action: { [weak self] _ in self?.wireframe?.popMe() }),
 				createButton(title: "replace stack", action: { [weak self] _ in self?.wireframe?.replaceStack(baseTitle: (self?.navigationItem.title ?? "") + "!") }),
 				createButton(title: "present fullscreen", action: { [weak self] _ in self?.wireframe?.presentSomethingFullscreen(title: (self?.navigationItem.title ?? "") + ".1") }),
 				createButton(title: "present popover", action: { [weak self] sender in self?.wireframe?.presentSomethingPopover(title: (self?.navigationItem.title ?? "") + ".1", sourceView: sender) }),
 				createButton(title: "dismiss", action: { [weak self] _ in self?.wireframe?.dismiss() }),
+				createButton(title: "dismiss keyboard", action: { [weak self] _ in self?.wireframe?.dismissKeyboard() }),
 				createButton(title: "switch to", action: { [weak self] _ in self?.wireframe?.switchTab() }),
 				createButton(title: "cycle tabs", action: { [weak self] _ in self?.wireframe?.cycleTabs() }),
 				createButton(title: "switch tab and push", action: { [weak self] _ in self?.wireframe?.switchAndPush(title: (self?.navigationItem.title ?? "") + ".s1") }),
 				createButton(title: "push and switch tab and push", action: { [weak self] _ in self?.wireframe?.pushAndSwitchAndPush() }),
 				createButton(title: "push legacy", action: { [weak self] _ in self?.wireframe?.pushLegacy() }),
 				createButton(title: "push viper", action: { [weak self] _ in self?.wireframe?.pushViper() }),
+				createTextField(),
 		]
 	}
 
@@ -99,6 +99,13 @@ class MyVC: UIViewController, Navigatable {
 		button.setTitle(title, for: .normal)
 		button.touchUpInside = action
 		return button
+	}
+
+	private func createTextField() -> UITextField {
+		let textField = UITextField()
+		textField.backgroundColor = .lightGray
+		textField.placeholder = "for showing keyboard"
+		return textField
 	}
 
 	func didNavigateTo() {
