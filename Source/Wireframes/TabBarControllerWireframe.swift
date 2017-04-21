@@ -92,7 +92,7 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 				lastNavigationState = nil
 		}
 
-		return .didHandle
+		return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
 	}
 
 	private func showTab(_ index: Int) {

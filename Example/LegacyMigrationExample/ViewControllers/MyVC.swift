@@ -78,7 +78,7 @@ class MyVC: UIViewController, Navigatable {
 				createButton(title: "present popover", action: { [weak self] sender in self?.wireframe?.presentSomethingPopover(title: (self?.navigationItem.title ?? "") + ".1", sourceView: sender) }),
 				createButton(title: "dismiss", action: { [weak self] _ in self?.wireframe?.dismiss() }),
 				createButton(title: "dismiss keyboard", action: { [weak self] _ in self?.wireframe?.dismissKeyboard() }),
-				createButton(title: "dismiss globally", action: { [weak self] _ in self?.wireframe?.dismissGlobally() }),
+				createButton(title: "dismiss globally and push", action: { [weak self] _ in self?.wireframe?.dismissGloballyAndPush(title: (self?.navigationItem.title ?? "") + ".1") }),
 				createButton(title: "switch to", action: { [weak self] _ in self?.wireframe?.switchTab() }),
 				createButton(title: "cycle tabs", action: { [weak self] _ in self?.wireframe?.cycleTabs() }),
 				createButton(title: "switch tab and push", action: { [weak self] _ in self?.wireframe?.switchAndPush(title: (self?.navigationItem.title ?? "") + ".s1") }),

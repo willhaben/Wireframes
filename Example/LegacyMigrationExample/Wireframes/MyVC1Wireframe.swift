@@ -45,10 +45,12 @@ class MyVCWireframe: ViewControllerWireframe {
 		dispatch(PresentationControllerNavigationCommand.dismiss(wireframe: self, animated: true))
 	}
 
-	func dismissGlobally() {
+	func dismissGloballyAndPush(title: String) {
+		let nextWF = WireframeFactory.createMyVCWireframe(title: title, configuration: { _ in })
 		let navChain = AnyNavigationCommandChain(navigationCommands: [
 				KeyboardDismissNavigationCommand.dismissKeyboard,
-				GlobalPresentationControllerNavigationCommand.dismissAnythingIfPresented(animated: true)
+				GlobalPresentationControllerNavigationCommand.dismissAnythingIfPresented(animated: true),
+				NavigationControllerNavigationCommand.push(wireframe: nextWF, animated: true)
 		])
 		AppDelegate.shared.rootWireframe.dispatch(navChain)
 	}

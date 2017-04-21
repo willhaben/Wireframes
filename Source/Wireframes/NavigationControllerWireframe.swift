@@ -19,11 +19,11 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 			return _childWireframes
 		}
 		set(newValue) {
-			setChildWireframes(newValue, animated: false)
+			setChildWireframes(newValue, animated: false, completion: {})
 		}
 	}
 
-	func setChildWireframes(_ childWireframes: [ViewControllerWireframeInterface], animated: Bool) {
+	func setChildWireframes(_ childWireframes: [ViewControllerWireframeInterface], animated: Bool, completion: @escaping () -> Void) {
 		let oldChildWireframes = _childWireframes
 		guard !oldChildWireframes.elementsEqual(childWireframes, by: { $0 === $1 }) else {
 			return
@@ -41,6 +41,18 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 		}
 		let newViewControllers = childWireframes.map({ wireframe in wireframe.viewController })
 		navigationController.setViewControllers(newViewControllers, animated: animated)
+		if let tc = navigationController.transitionCoordinator {
+			assert(animated)
+			assert(!tc.initiallyInteractive, "initiallyInteractive transitions not supported")
+			tc.animate(alongsideTransition: nil, completion: { _ in
+				completion()
+			})
+		}
+		else {
+			// cannot assert for !animated, as in some cases UIKit does not animate a push, even when we tell it to, e.g. when switching tabs and immediately pushing
+//			assert(!animated)
+			completion()
+		}
 	}
 
 	/** IMPORTANT
@@ -58,58 +70,73 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 	}
 
 	override public func handle(_ navigationCommand: NavigationCommand) -> WireframeHandleNavigationCommandResult {
-		if super.handle(navigationCommand) == .didHandle {
-			return .didHandle
+		if case .didHandle(let waiter) = super.handle(navigationCommand) {
+			return .didHandle(completionWaiter: waiter)
 		}
 
 		if let navigationCommand = navigationCommand as? NavigationControllerNavigationCommand {
+			let waiter = DumbWaiter()
 			switch navigationCommand {
 				case .push(let wireframe, let animated):
 					assert(!(wireframe is NavigationControllerWireframeInterface))
-					pushWireframe(wireframe, animated: animated)
+					pushWireframe(wireframe, animated: animated, completion: {
+						waiter.fulfil()
+					})
 				case .pushFromFirstChild(let wireframe, let animated):
 					assert(!(wireframe is NavigationControllerWireframeInterface))
 					guard let first = childWireframes.first else {
 						assertionFailure()
-						return .didHandle
+						// no wireframes => consider handled
+						return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
 					}
 
-					setChildWireframes([first, wireframe], animated: animated)
+					setChildWireframes([first, wireframe], animated: animated, completion: {
+						waiter.fulfil()
+					})
 				case .pop(let wireframe, let animated):
 					assert(!(wireframe is NavigationControllerWireframeInterface))
-					popWireframe(wireframe, animated: animated)
+					popWireframe(wireframe, animated: animated, completion: {
+						waiter.fulfil()
+					})
 				case .popToFirstChild(let animated):
 					guard let first = childWireframes.first else {
 						assertionFailure()
-						return .didHandle
+						// no wireframes => consider handled
+						return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
 					}
 
-					setChildWireframes([first], animated: animated)
+					setChildWireframes([first], animated: animated, completion: {
+						waiter.fulfil()
+					})
 				case .replaceStack(let wireframes, let animated):
 					assert(!wireframes.contains(where: { $0 is NavigationControllerWireframeInterface }))
-					setChildWireframes(wireframes, animated: animated)
+					setChildWireframes(wireframes, animated: animated, completion: {
+						waiter.fulfil()
+					})
 			}
-			return .didHandle
+			return .didHandle(completionWaiter: waiter)
 		}
 
 		return .couldNotHandle
 	}
 
-	private func pushWireframe(_ wireframe: ViewControllerWireframeInterface, animated: Bool) {
+	private func pushWireframe(_ wireframe: ViewControllerWireframeInterface, animated: Bool, completion: @escaping () -> Void) {
 		var newWireframes = childWireframes
 		newWireframes.append(wireframe)
-		setChildWireframes(newWireframes, animated: animated)
+		setChildWireframes(newWireframes, animated: animated, completion: completion)
 	}
 
-	private func popWireframe(_ wireframe: ViewControllerWireframeInterface, animated: Bool) {
+	private func popWireframe(_ wireframe: ViewControllerWireframeInterface, animated: Bool, completion: @escaping () -> Void) {
 		guard let last = childWireframes.last, wireframe === last else {
 			assertionFailure()
+			// still need to call completion, as this method does not have any means to report an error
+			completion()
 			return
 		}
 
 		var newWireframes = childWireframes
 		_ = newWireframes.popLast()
-		setChildWireframes(newWireframes, animated: animated)
+		setChildWireframes(newWireframes, animated: animated, completion: completion)
 	}
 
 }

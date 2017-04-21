@@ -37,9 +37,12 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 			return .couldNotHandle
 		}
 
+		let waiter = DumbWaiter()
 		switch navigationCommand {
 			case .present(let wireframe, let modalPresentationStyle, let modalTransitionStyle, let animated):
-				presentWireframe(wireframe, modalPresentationStyle: modalPresentationStyle, modalTransitionStyle: modalTransitionStyle, animated: animated)
+				presentWireframe(wireframe, modalPresentationStyle: modalPresentationStyle, modalTransitionStyle: modalTransitionStyle, animated: animated, completion: {
+					waiter.fulfil()
+				})
 			case .dismiss(let wireframe, let animated):
 				guard wireframe !== self else {
 					// dismissal should be carried out by presenting wireframe, so it can properly clear its presentedWireframe property => bubble up
@@ -50,7 +53,9 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 					return .couldNotHandle
 				}
 
-				dismissWireframe(wireframe, animated: animated)
+				dismissWireframe(wireframe, animated: animated, completion: {
+					waiter.fulfil()
+				})
 			case .popoverWasDismissedByUserTappingOutside(let wireframe):
 				guard wireframe !== self else {
 					// dismissal should be carried out by presenting wireframe, so it can properly clear its presentedWireframe property => bubble up
@@ -60,18 +65,21 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 				assert(wireframe === presentedWireframe)
 
 				presentedWireframe = nil
+				waiter.fulfil()
 		}
 
-		return .didHandle
+		return .didHandle(completionWaiter: waiter)
 	}
 
 }
 
 private extension ViewControllerWireframe {
 
-	func presentWireframe(_ wireframe: ViewControllerWireframeInterface, modalPresentationStyle: ModalPresentationStyle, modalTransitionStyle: ModalTransitionStyle, animated: Bool) {
+	func presentWireframe(_ wireframe: ViewControllerWireframeInterface, modalPresentationStyle: ModalPresentationStyle, modalTransitionStyle: ModalTransitionStyle, animated: Bool, completion: @escaping () -> Void) {
 		guard presentedWireframe == nil else {
 			assertionFailure("cannot present, already presenting")
+			// still need to call completion, as this method does not have any means to report an error
+			completion()
 			return
 		}
 
@@ -84,6 +92,7 @@ private extension ViewControllerWireframe {
 		viewController.present(wireframe.viewController, animated: animated, completion: {
 			// avoid bar buttons to be clickable when popover is visible
 			wireframe.viewController.popoverPresentationController?.passthroughViews = nil
+			completion()
 		})
 
 		switch modalPresentationStyle {
@@ -112,14 +121,18 @@ private extension ViewControllerWireframe {
 		}
 	}
 
-	func dismissWireframe(_ wireframe: ViewControllerWireframeInterface, animated: Bool) {
+	func dismissWireframe(_ wireframe: ViewControllerWireframeInterface, animated: Bool, completion: @escaping () -> Void) {
 		guard let presentedWireframe = presentedWireframe, wireframe === presentedWireframe else {
 			assertionFailure()
+			// still need to call completion, as this method does not have any means to report an error
+			completion()
 			return
 		}
 
-		viewController.dismiss(animated: animated)
-		self.presentedWireframe = nil
+		viewController.dismiss(animated: animated, completion: {
+			self.presentedWireframe = nil
+			completion()
+		})
 	}
 
 }

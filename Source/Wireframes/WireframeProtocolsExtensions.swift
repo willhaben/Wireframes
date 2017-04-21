@@ -28,6 +28,7 @@ private struct NavigationState: NavigationStateInterface {
 public extension WireframeInterface {
 
 	// first commands are bubbled up, then when at the top, bubbled down
+	// notice that commands will wait for execution of previous commands (e.g. due to uikit animations), don't dispatch any commands inbetween, or else it could mess up the view state
 	func dispatch(_ navigationCommandChain: NavigationCommandChain) {
 		if let uikitNavigationCommand = navigationCommandChain as? UIKitNavigationCommand {
 			let currentState = currentNavigationState()
@@ -38,8 +39,17 @@ public extension WireframeInterface {
 			return
 		}
 
-		notifyNewCurrentChildOfNavigation({
-			handle(navigationCommandChain.navigationCommandSequence(), bubbleRemaining: .up)
+		let navigationStateBefore = currentNavigationState()
+		let waiter = handle(navigationCommandChain.navigationCommandSequence(), bubbleRemaining: .up)
+		waiter.setOnFulfillClosure(onFulfill: { [weak self] in
+			// retain itself so it does not get deallocated early - have faith that waiter will be fulfilled eventually, otherwise we produce a leak
+			_ = waiter
+			
+			guard let strongSelf = self else {
+				return
+			}
+			let navigationStateAfter = strongSelf.currentNavigationState()
+			strongSelf.didNavigate(from: navigationStateBefore, to: navigationStateAfter)
 		})
 	}
 
@@ -60,31 +70,59 @@ public extension WireframeInterface {
 
 	// MARK: Private Helper Methods
 
-	private func handle(_ navigationCommandSequence: NavigationCommandSequence, bubbleRemaining bubbleDirection: BubbleDirection) {
-		let remainingNavigationCommandSequence = navigationCommandSequence.drop(while: { navigationCommand in
-			// some navigation commands don't need a wireframe to be handled => globallyHandle
-			return globallyHandle(navigationCommand) == .didHandle || handle(navigationCommand) == .didHandle
-		})
+	private func handle(_ navigationCommandSequence: NavigationCommandSequence, bubbleRemaining bubbleDirection: BubbleDirection) -> DumbWaiter {
+		let waiter = DumbWaiter()
+		handle(navigationCommandSequence, bubbleRemaining: bubbleDirection, wholeSequenceWaiter: waiter)
+		return waiter
+	}
 
-		// workaround, as isEmpty is not defined on Sequence but rather on Collection
-		let remainingIterator = remainingNavigationCommandSequence.makeIterator()
-		guard let _ = remainingIterator.next() else {
+	private func handle(_ navigationCommandSequence: NavigationCommandSequence, bubbleRemaining bubbleDirection: BubbleDirection, wholeSequenceWaiter: DumbWaiter) {
+		guard let nextCommand = navigationCommandSequence.makeIterator().next() else {
 			// no more elements => stop bubbling
+			wholeSequenceWaiter.fulfil()
 			return
 		}
 
-		switch (bubbleDirection, parentWireframe, currentlyActiveChildWireframe) {
-			case (.up, .some(let parentWireframe), _):
-				// bubble up remaining commands
-				parentWireframe.handle(remainingNavigationCommandSequence, bubbleRemaining: .up)
+		let result: WireframeHandleNavigationCommandResult = {
+			// first try globallyHandle, then if it did not work, try handle
+			switch self.globallyHandle(nextCommand) {
+				case .couldNotHandle:
+					return self.handle(nextCommand)
+				case .didHandle(let completionWaiter):
+					return .didHandle(completionWaiter: completionWaiter)
+			}
+		}()
 
-			case (.up, .none, .some(let childWireframe)), (.down, _, .some(let childWireframe)):
-				// bubbling up and no parentWireframe => bubble down
-				// bubbling down => keep bubbling down
-				childWireframe.handle(remainingNavigationCommandSequence, bubbleRemaining: .down)
+		switch result {
+			case .couldNotHandle:
+				// bubble navigation command
+				switch (bubbleDirection, parentWireframe, currentlyActiveChildWireframe) {
+					case (.up, .some(let parentWireframe), _):
+						// bubble up remaining commands
+						parentWireframe.handle(navigationCommandSequence, bubbleRemaining: .up, wholeSequenceWaiter: wholeSequenceWaiter)
 
-			case (.up, _, _), (.down, _, _):
-				assertionFailure("could not handle remaining NavigationCommandSequence \(navigationCommandSequence)")
+					case (.up, .none, .some(let childWireframe)), (.down, _, .some(let childWireframe)):
+						// bubbling up and no parentWireframe => bubble down
+						// bubbling down => keep bubbling down
+						childWireframe.handle(navigationCommandSequence, bubbleRemaining: .down, wholeSequenceWaiter: wholeSequenceWaiter)
+
+					case (.up, _, _), (.down, _, _):
+						assertionFailure("could not handle remaining NavigationCommandSequence \(navigationCommandSequence)")
+				}
+
+			case .didHandle(let completionWaiter):
+				// try handling remaining navigation commands on self
+				completionWaiter.setOnFulfillClosure(onFulfill: { [weak self] in
+					guard let strongSelf = self else {
+						assertionFailure("wireframe was deallocated while dispatch was in progress")
+						// still fulfill waiter, so dispatch call gets some closure
+						wholeSequenceWaiter.fulfil()
+						return
+					}
+
+					let remainingNavigationCommandSequence = navigationCommandSequence.dropFirst()
+					strongSelf.handle(remainingNavigationCommandSequence, bubbleRemaining: bubbleDirection, wholeSequenceWaiter: wholeSequenceWaiter)
+				})
 		}
 	}
 
@@ -94,7 +132,7 @@ public extension WireframeInterface {
 				case .dismissKeyboard:
 					UIResponder.wf_resignFirstResponder()
 			}
-			return .didHandle
+			return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
 		}
 
 		if let navigationCommand = navigationCommand as? GlobalPresentationControllerNavigationCommand {
@@ -105,25 +143,27 @@ public extension WireframeInterface {
 					assert(relativeRootPresentingOptional === globalActiveRootPresentingOptional, "currently not supported")
 					guard let relativeRootPresenting = relativeRootPresentingOptional else {
 						// nothing presented => nothing to dismiss
-						return .didHandle
+						return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
 					}
 					guard let presentedWireframe = relativeRootPresenting.currentlyActiveChildWireframe as? ViewControllerWireframeInterface else {
-						assertionFailure()
-						return .didHandle
+						assertionFailure("found wireframe with isPresenting == true, but no currentlyActiveChildWireframe")
+						// return didHandle as a safety net
+						return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
 					}
-					_ = relativeRootPresenting.handle(PresentationControllerNavigationCommand.dismiss(wireframe: presentedWireframe, animated: animated))
+
+					let result = relativeRootPresenting.handle(PresentationControllerNavigationCommand.dismiss(wireframe: presentedWireframe, animated: animated))
+					switch result {
+						case .couldNotHandle:
+							assertionFailure()
+							// return didHandle even if the command could not be handled - safety net - should not happen, as guards above should catch that case
+							return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
+						case .didHandle:
+							return result
+					}
 			}
-			return .didHandle
 		}
 
 		return .couldNotHandle
-	}
-
-	private func notifyNewCurrentChildOfNavigation(_ navigation: () -> Void) {
-		let navigationStateBefore = currentNavigationState()
-		navigation()
-		let navigationStateAfter = currentNavigationState()
-		didNavigate(from: navigationStateBefore, to: navigationStateAfter)
 	}
 
 	private func didNavigate(from fromNavigationState: NavigationStateInterface, to toNavigationState: NavigationStateInterface) {

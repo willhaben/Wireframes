@@ -52,7 +52,7 @@ public protocol WireframeTag {
 public enum WireframeHandleNavigationCommandResult {
 
 	case couldNotHandle
-	case didHandle
+	case didHandle(completionWaiter: DumbWaiter)
 
 }
 
