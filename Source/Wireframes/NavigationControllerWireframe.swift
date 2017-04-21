@@ -30,6 +30,10 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 		}
 
 		assert(childWireframes.count > 0)
+		assert({
+			let removedWireframes = oldChildWireframes.filter({ oldChildWireframe in !childWireframes.contains(where: { newChildWireframe in oldChildWireframe === newChildWireframe }) })
+			return !removedWireframes.contains(where: { $0.isPresenting })
+		}(), "cannot pop wireframe that is currently presenting")
 		// IMPORTANT: the childWireframes array needs to be set BEFORE setting the navigationController.setViewControllers
 		_childWireframes = childWireframes
 		childWireframes.forEach { wireframe in
