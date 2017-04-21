@@ -54,9 +54,9 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 		self.tabBarController.delegate = self
 	}
 
-	public func handle(_ navigationCommand: NavigationCommand) -> Bool {
+	public func handle(_ navigationCommand: NavigationCommand) -> WireframeHandleNavigationCommandResult {
 		guard let navigationCommand = navigationCommand as? TabBarControllerNavigationCommand else {
-			return false
+			return .couldNotHandle
 		}
 
 		switch navigationCommand {
@@ -65,7 +65,7 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 					let (_, tag) = childWireframeAndTag
 					return tag.equals(toWireframeWithTag)
 				}) else {
-					return false
+					return .couldNotHandle
 				}
 
 				showTab(index)
@@ -74,7 +74,7 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 			case .cycleTabs:
 				guard let vcs = tabBarController.viewControllers, vcs.count > 0 else {
 					assertionFailure("no tabs")
-					return false
+					return .couldNotHandle
 				}
 
 				showTab((tabBarController.selectedIndex + 1) % vcs.count)
@@ -83,7 +83,7 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 			case .replaceTabs(let wireframesAndTags, let selectedTag):
 				guard let wireframeAndTag = wireframesAndTags.first(where: { (wireframe, tag) in return tag.equals(selectedTag) }) else {
 					assertionFailure("selectedTag not contained in wireframesAndTags")
-					return false
+					return .couldNotHandle
 				}
 
 				childWireframesAndTags = wireframesAndTags
@@ -92,7 +92,7 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 				lastNavigationState = nil
 		}
 
-		return true
+		return .didHandle
 	}
 
 	private func showTab(_ index: Int) {

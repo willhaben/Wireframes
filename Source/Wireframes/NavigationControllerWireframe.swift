@@ -53,9 +53,9 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 		self.childWireframes = childWireframes
 	}
 
-	override public func handle(_ navigationCommand: NavigationCommand) -> Bool {
-		if super.handle(navigationCommand) {
-			return true
+	override public func handle(_ navigationCommand: NavigationCommand) -> WireframeHandleNavigationCommandResult {
+		if super.handle(navigationCommand) == .didHandle {
+			return .didHandle
 		}
 
 		if let navigationCommand = navigationCommand as? NavigationControllerNavigationCommand {
@@ -67,7 +67,7 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 					assert(!(wireframe is NavigationControllerWireframeInterface))
 					guard let first = childWireframes.first else {
 						assertionFailure()
-						return true
+						return .didHandle
 					}
 
 					setChildWireframes([first, wireframe], animated: animated)
@@ -77,7 +77,7 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 				case .popToFirstChild(let animated):
 					guard let first = childWireframes.first else {
 						assertionFailure()
-						return true
+						return .didHandle
 					}
 
 					setChildWireframes([first], animated: animated)
@@ -85,10 +85,10 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 					assert(!wireframes.contains(where: { $0 is NavigationControllerWireframeInterface }))
 					setChildWireframes(wireframes, animated: animated)
 			}
-			return true
+			return .didHandle
 		}
 
-		return false
+		return .couldNotHandle
 	}
 
 	private func pushWireframe(_ wireframe: ViewControllerWireframeInterface, animated: Bool) {

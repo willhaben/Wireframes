@@ -63,7 +63,7 @@ public extension WireframeInterface {
 	private func handle(_ navigationCommandSequence: NavigationCommandSequence, bubbleRemaining bubbleDirection: BubbleDirection) {
 		let remainingNavigationCommandSequence = navigationCommandSequence.drop(while: { navigationCommand in
 			// some navigation commands don't need a wireframe to be handled => globallyHandle
-			return globallyHandle(navigationCommand) || handle(navigationCommand)
+			return globallyHandle(navigationCommand) == .didHandle || handle(navigationCommand) == .didHandle
 		})
 
 		// workaround, as isEmpty is not defined on Sequence but rather on Collection
@@ -88,13 +88,13 @@ public extension WireframeInterface {
 		}
 	}
 
-	private func globallyHandle(_ navigationCommand: NavigationCommand) -> Bool {
+	private func globallyHandle(_ navigationCommand: NavigationCommand) -> WireframeHandleNavigationCommandResult {
 		if let navigationCommand = navigationCommand as? KeyboardDismissNavigationCommand {
 			switch navigationCommand {
 				case .dismissKeyboard:
 					UIResponder.wf_resignFirstResponder()
 			}
-			return true
+			return .didHandle
 		}
 
 		if let navigationCommand = navigationCommand as? GlobalPresentationControllerNavigationCommand {
@@ -105,18 +105,18 @@ public extension WireframeInterface {
 					assert(relativeRootPresentingOptional === globalActiveRootPresentingOptional, "currently not supported")
 					guard let relativeRootPresenting = relativeRootPresentingOptional else {
 						// nothing presented => nothing to dismiss
-						return true
+						return .didHandle
 					}
 					guard let presentedWireframe = relativeRootPresenting.currentlyActiveChildWireframe as? ViewControllerWireframeInterface else {
 						assertionFailure()
-						return true
+						return .didHandle
 					}
 					_ = relativeRootPresenting.handle(PresentationControllerNavigationCommand.dismiss(wireframe: presentedWireframe, animated: animated))
 			}
-			return true
+			return .didHandle
 		}
 
-		return false
+		return .couldNotHandle
 	}
 
 	private func notifyNewCurrentChildOfNavigation(_ navigation: () -> Void) {

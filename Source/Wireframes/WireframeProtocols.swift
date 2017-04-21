@@ -18,7 +18,7 @@ public protocol WireframeInterface: class {
 	var viewController: UIViewController { get }
 
 	func dispatch(_ navigationCommandChain: NavigationCommandChain)
-	func handle(_ navigationCommand: NavigationCommand) -> Bool
+	func handle(_ navigationCommand: NavigationCommand) -> WireframeHandleNavigationCommandResult
 
 	func currentNavigationState() -> NavigationStateInterface
 
@@ -46,6 +46,13 @@ public protocol NavigationChildWireframeInterface: class {
 public protocol WireframeTag {
 
 	func equals(_ otherWireframeTag: WireframeTag) -> Bool
+
+}
+
+public enum WireframeHandleNavigationCommandResult {
+
+	case couldNotHandle
+	case didHandle
 
 }
 

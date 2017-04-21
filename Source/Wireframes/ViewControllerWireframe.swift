@@ -32,9 +32,9 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 		self._viewController = viewController
 	}
 
-	public func handle(_ navigationCommand: NavigationCommand) -> Bool {
+	public func handle(_ navigationCommand: NavigationCommand) -> WireframeHandleNavigationCommandResult {
 		guard let navigationCommand = navigationCommand as? PresentationControllerNavigationCommand else {
-			return false
+			return .couldNotHandle
 		}
 
 		switch navigationCommand {
@@ -43,18 +43,18 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 			case .dismiss(let wireframe, let animated):
 				guard wireframe !== self else {
 					// dismissal should be carried out by presenting wireframe, so it can properly clear its presentedWireframe property => bubble up
-					return false
+					return .couldNotHandle
 				}
 				guard wireframe === presentedWireframe else {
 					// dismissal should be carried out by presenting wireframe => bubble up/down
-					return false
+					return .couldNotHandle
 				}
 
 				dismissWireframe(wireframe, animated: animated)
 			case .popoverWasDismissedByUserTappingOutside(let wireframe):
 				guard wireframe !== self else {
 					// dismissal should be carried out by presenting wireframe, so it can properly clear its presentedWireframe property => bubble up
-					return false
+					return .couldNotHandle
 				}
 
 				assert(wireframe === presentedWireframe)
@@ -62,7 +62,7 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 				presentedWireframe = nil
 		}
 
-		return true
+		return .didHandle
 	}
 
 }
