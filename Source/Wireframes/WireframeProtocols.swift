@@ -17,7 +17,7 @@ public protocol WireframeInterface: class {
 	// unfortunately we need to give access to contained viewController
 	var viewController: UIViewController { get }
 
-	func dispatch(_ navigationCommandChain: NavigationCommandChain)
+	func dispatch(_ navigationCommandChain: NavigationCommandChain, onComplete: (() -> Void)?)
 	func handle(_ navigationCommand: NavigationCommand) -> WireframeHandleNavigationCommandResult
 
 	func currentNavigationState() -> NavigationStateInterface

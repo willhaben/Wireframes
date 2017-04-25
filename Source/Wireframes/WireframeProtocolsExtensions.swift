@@ -29,7 +29,7 @@ public extension WireframeInterface {
 
 	// first commands are bubbled up, then when at the top, bubbled down
 	// notice that commands will wait for execution of previous commands (e.g. due to uikit animations), don't dispatch any commands inbetween, or else it could mess up the view state
-	func dispatch(_ navigationCommandChain: NavigationCommandChain) {
+	func dispatch(_ navigationCommandChain: NavigationCommandChain, onComplete: (() -> Void)? = nil) {
 		if let uikitNavigationCommand = navigationCommandChain as? UIKitNavigationCommand {
 			let currentState = currentNavigationState()
 			switch uikitNavigationCommand {
@@ -50,6 +50,8 @@ public extension WireframeInterface {
 			}
 			let navigationStateAfter = strongSelf.currentNavigationState()
 			strongSelf.didNavigate(from: navigationStateBefore, to: navigationStateAfter)
+			
+			onComplete?()
 		})
 	}
 
