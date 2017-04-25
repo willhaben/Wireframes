@@ -57,7 +57,7 @@ public extension WireframeInterface {
 
 	func didNavigateTo() {
 		// unfortunately until swift 4 where we have class & protocol existentials, we need casting
-		assert(viewController is Navigatable)
+		assert(viewController is Navigatable || viewController is UIAlertController)
 		guard let navigatable = viewController as? Navigatable else {
 			return
 		}

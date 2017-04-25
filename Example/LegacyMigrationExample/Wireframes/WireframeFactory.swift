@@ -6,6 +6,7 @@ private typealias NavigationWireframeCreation = WireframeFactory
 private typealias TaggingBlocks = WireframeFactory
 private typealias ViperModule = WireframeFactory
 private typealias MyVCCreation = WireframeFactory
+private typealias AlertCreation = WireframeFactory
 
 
 class WireframeFactory: NSObject {
@@ -82,6 +83,24 @@ extension MyVCCreation {
 		let wireframe = MyVCWireframe(viewController: viewController)
 		viewController.wireframe = wireframe
 		viewController.onDidNavigateToInStateLoadedFull = createTaggingBlockForMyVC()
+		return wireframe
+	}
+
+}
+
+
+extension AlertCreation {
+
+	class func createAlertWireframe(title: String) -> AlertWireframe {
+		let alertController = WFAlertController(title: title, message: "message", preferredStyle: .alert)
+		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+			NSLog("cancelled WFAlertController")
+		}))
+		alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+			NSLog("confirmed WFAlertController")
+		}))
+		let wireframe = AlertWireframe(alertController: alertController)
+		alertController.wireframe = wireframe
 		return wireframe
 	}
 

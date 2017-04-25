@@ -21,7 +21,7 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 
 	public var wasShown: Bool = false
 
-	fileprivate var presentedWireframe: ViewControllerWireframeInterface? = nil
+	fileprivate var presentedWireframe: WireframeInterface? = nil
 
 	/** IMPORTANT
 		from this point on this Wireframe manages the UIViewController instance
@@ -41,6 +41,10 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 		switch navigationCommand {
 			case .present(let wireframe, let modalPresentationStyle, let modalTransitionStyle, let animated):
 				presentWireframe(wireframe, modalPresentationStyle: modalPresentationStyle, modalTransitionStyle: modalTransitionStyle, animated: animated, completion: {
+					waiter.fulfil()
+				})
+			case .presentAlert(let wireframe):
+				presentAlertWireframe(wireframe, completion: {
 					waiter.fulfil()
 				})
 			case .dismiss(let wireframe, let animated):
@@ -66,6 +70,16 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 
 				presentedWireframe = nil
 				waiter.fulfil()
+			case .alertWasDismissed(let wireframe):
+				guard wireframe !== self else {
+					// dismissal should be carried out by presenting wireframe, so it can properly clear its presentedWireframe property => bubble up
+					return .couldNotHandle
+				}
+
+				assert(wireframe === presentedWireframe)
+
+				presentedWireframe = nil
+				waiter.fulfil()
 		}
 
 		return .didHandle(completionWaiter: waiter)
@@ -78,6 +92,13 @@ private extension ViewControllerWireframe {
 	func presentWireframe(_ wireframe: ViewControllerWireframeInterface, modalPresentationStyle: ModalPresentationStyle, modalTransitionStyle: ModalTransitionStyle, animated: Bool, completion: @escaping () -> Void) {
 		guard presentedWireframe == nil else {
 			assertionFailure("cannot present, already presenting")
+			// still need to call completion, as this method does not have any means to report an error
+			completion()
+			return
+		}
+
+		guard !(wireframe.viewController is UIAlertController) else {
+			assertionFailure("use `presentAlert` instead")
 			// still need to call completion, as this method does not have any means to report an error
 			completion()
 			return
@@ -119,6 +140,25 @@ private extension ViewControllerWireframe {
 			// nothing to do
 			break
 		}
+	}
+
+	func presentAlertWireframe(_ wireframe: AlertWireframeInterface, completion: @escaping () -> Void) {
+		guard wireframe.viewController is WFAlertController else {
+			assertionFailure("UIAlertController not supported, use WFAlertController")
+			// still need to call completion, as this method does not have any means to report an error
+			completion()
+			return
+		}
+
+		assert(viewController.presentedViewController == nil || viewController.presentedViewController?.isBeingDismissed == true, "do not directly use `present` methods on viewController instances")
+
+		presentedWireframe = wireframe
+		wireframe.parentWireframe = self
+		viewController.present(wireframe.viewController, animated: true, completion: {
+			// avoid bar buttons to be clickable when popover is visible
+			wireframe.viewController.popoverPresentationController?.passthroughViews = nil
+			completion()
+		})
 	}
 
 	func dismissWireframe(_ wireframe: ViewControllerWireframeInterface, animated: Bool, completion: @escaping () -> Void) {

@@ -41,6 +41,11 @@ class MyVCWireframe: ViewControllerWireframe {
 		dispatch(PresentationControllerNavigationCommand.present(wireframe: nextWF, modalPresentationStyle: .popoverFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: willRepositionPopoverToRectInViewBlock), modalTransitionStyle: .coverVertical, animated: true))
 	}
 
+	func presentAlert(title: String) {
+		let alertWF = WireframeFactory.createAlertWireframe(title: title)
+		dispatch(PresentationControllerNavigationCommand.presentAlert(wireframe: alertWF))
+	}
+
 	func dismiss() {
 		dispatch(PresentationControllerNavigationCommand.dismiss(wireframe: self, animated: true))
 	}
