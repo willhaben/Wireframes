@@ -42,6 +42,8 @@ public extension WireframeInterface {
 		let navigationStateBefore = currentNavigationState()
 		let waiter = handle(navigationCommandChain.navigationCommandSequence(), bubbleRemaining: .up)
 		waiter.setOnFulfillClosure(onFulfill: { [weak self] in
+			defer { onComplete?() }
+			
 			// retain itself so it does not get deallocated early - have faith that waiter will be fulfilled eventually, otherwise we produce a leak
 			_ = waiter
 			
@@ -50,8 +52,6 @@ public extension WireframeInterface {
 			}
 			let navigationStateAfter = strongSelf.currentNavigationState()
 			strongSelf.didNavigate(from: navigationStateBefore, to: navigationStateAfter)
-			
-			onComplete?()
 		})
 	}
 
