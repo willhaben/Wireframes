@@ -26,6 +26,8 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 	func setChildWireframes(_ childWireframes: [ViewControllerWireframeInterface], animated: Bool, completion: @escaping () -> Void) {
 		let oldChildWireframes = _childWireframes
 		guard !oldChildWireframes.elementsEqual(childWireframes, by: { $0 === $1 }) else {
+			// still need to call completion, so following commands get executed
+			completion()
 			return
 		}
 
