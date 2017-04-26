@@ -43,7 +43,7 @@ class MyVCWireframe: ViewControllerWireframe {
 
 	func presentAlert(title: String) {
 		let alertWF = WireframeFactory.createAlertWireframe(title: title)
-		dispatch(PresentationControllerNavigationCommand.presentAlert(wireframe: alertWF))
+		AppDelegate.shared.rootWireframe.dispatch(PresentationControllerNavigationCommand.presentAlert(wireframe: alertWF))
 	}
 
 	func dismiss() {

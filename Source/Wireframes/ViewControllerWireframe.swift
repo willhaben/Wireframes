@@ -40,10 +40,18 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 		let waiter = DumbWaiter()
 		switch navigationCommand {
 			case .present(let wireframe, let modalPresentationStyle, let modalTransitionStyle, let animated):
+				guard presentedWireframe == nil, (viewController.presentedViewController == nil || viewController.presentedViewController?.isBeingDismissed == true) else {
+					// presenting should be bubbled down to first wireframe that is not presenting anything - notice that viewController.presentedViewController returns any decendant presented viewcontroller, not just direct children
+					return .couldNotHandle
+				}
 				presentWireframe(wireframe, modalPresentationStyle: modalPresentationStyle, modalTransitionStyle: modalTransitionStyle, animated: animated, completion: {
 					waiter.fulfil()
 				})
 			case .presentAlert(let wireframe):
+				guard presentedWireframe == nil, (viewController.presentedViewController == nil || viewController.presentedViewController?.isBeingDismissed == true) else {
+					// presenting should be bubbled down to first wireframe that is not presenting anything - notice that viewController.presentedViewController returns any decendant presented viewcontroller, not just direct children
+					return .couldNotHandle
+				}
 				presentAlertWireframe(wireframe, completion: {
 					waiter.fulfil()
 				})
