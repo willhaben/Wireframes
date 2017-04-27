@@ -95,6 +95,12 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 					setChildWireframes([first, wireframe], animated: animated, completion: {
 						waiter.fulfil()
 					})
+				case .pushWithReplacingCondition(let condition, let findMode, let replaceMode, let wireframe, let animated):
+					assert(!(wireframe is NavigationControllerWireframeInterface))
+					let prefix = childWireframes.prefix(until: condition, findMode: findMode, replaceMode: replaceMode)
+					setChildWireframes(prefix + [wireframe], animated: animated, completion: {
+						waiter.fulfil()
+					})
 				case .pop(let wireframe, let animated):
 					assert(!(wireframe is NavigationControllerWireframeInterface))
 					popWireframe(wireframe, animated: animated, completion: {
@@ -191,6 +197,48 @@ extension NavigationControllerWireframe: UINavigationControllerDelegate {
 
 		// mark ALL childWireframes with wasShown, as when showing several wireframes at once, the ones in between have already been correctly added to the childWireframes array
 		childWireframes.forEach({ $0.wasShown = true })
+	}
+
+}
+
+private extension Array {
+
+	func prefix(until condition: (Element) -> Bool, findMode: WireframeFindMode, replaceMode: WireframeReplaceMode) -> [Element] {
+		switch findMode {
+			case .first:
+				var result: [Element] = []
+				for element in self {
+					guard !condition(element) else {
+						switch replaceMode {
+							case .replaceFoundWireframe:
+								return result
+							case .keepFoundWireframe:
+								result.append(element)
+								return result
+						}
+					}
+					result.append(element)
+				}
+				return result
+
+			case .last:
+				// if no elements matching condition found => return whole array
+				var lastPrefix = self
+				var result: [Element] = []
+				for element in self {
+					if condition(element) {
+						switch replaceMode {
+							case .replaceFoundWireframe:
+								lastPrefix = result
+							case .keepFoundWireframe:
+								lastPrefix = result
+								lastPrefix.append(element)
+						}
+					}
+					result.append(element)
+				}
+				return lastPrefix
+		}
 	}
 
 }

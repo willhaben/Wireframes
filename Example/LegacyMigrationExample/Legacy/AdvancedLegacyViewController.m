@@ -51,6 +51,9 @@
 			[self createButtonWithTitle:@"push" action:^(UIButton *button){
 				[weakSelf.wireframe pushSomethingWithTitle:[NSString stringWithFormat:@"%@.L", weakSelf.navigationItem.title]];
 			}],
+			[self createButtonWithTitle:@"push replacing legacy" action:^(UIButton *button){
+				[weakSelf.wireframe pushSomethingReplacingLastLegacyVCWithTitle:[NSString stringWithFormat:@"%@.L", weakSelf.navigationItem.title]];
+			}],
 	];
 }
 

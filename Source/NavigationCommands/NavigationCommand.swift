@@ -71,9 +71,20 @@ public enum GlobalPresentationControllerNavigationCommand: NavigationCommand {
 public enum NavigationControllerNavigationCommand: NavigationCommand {
 	case push(wireframe: ViewControllerWireframeInterface, animated: Bool)
 	case pushFromFirstChild(wireframe: ViewControllerWireframeInterface, animated: Bool)
+	case pushWithReplacingCondition(condition: (ViewControllerWireframeInterface) -> Bool, findMode: WireframeFindMode, replaceMode: WireframeReplaceMode, wireframe: ViewControllerWireframeInterface, animated: Bool)
 	case pop(wireframe: ViewControllerWireframeInterface, animated: Bool)
 	case popToFirstChild(animated: Bool)
 	case replaceStack(wireframes: [ViewControllerWireframeInterface], animated: Bool)
+}
+
+public enum WireframeFindMode {
+	case first
+	case last
+}
+
+public enum WireframeReplaceMode {
+	case keepFoundWireframe
+	case replaceFoundWireframe
 }
 
 public enum TabBarControllerNavigationCommand: NavigationCommand {
