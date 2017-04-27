@@ -101,6 +101,16 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 					setChildWireframes(prefix + [wireframe], animated: animated, completion: {
 						waiter.fulfil()
 					})
+				case .pushWithSimulatedPopAnimationWithReplacingCondition(let condition, let findMode, let replaceMode, let wireframe, let animated):
+					assert(!(wireframe is NavigationControllerWireframeInterface))
+					let prefix = childWireframes.prefix(until: condition, findMode: findMode, replaceMode: replaceMode)
+					let remaining = childWireframes.suffix(childWireframes.count - prefix.count)
+					// first insert the wireframe, then pop back animated
+					setChildWireframes(prefix + [wireframe] + remaining, animated: false, completion: {
+						self.setChildWireframes(prefix + [wireframe], animated: animated, completion: {
+							waiter.fulfil()
+						})
+					})
 				case .pop(let wireframe, let animated):
 					assert(!(wireframe is NavigationControllerWireframeInterface))
 					popWireframe(wireframe, animated: animated, completion: {
