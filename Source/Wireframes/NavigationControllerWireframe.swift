@@ -106,6 +106,7 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 					let prefix = childWireframes.prefix(until: condition, findMode: findMode, replaceMode: replaceMode)
 					let remaining = childWireframes.suffix(childWireframes.count - prefix.count)
 					// first insert the wireframe, then pop back animated
+					// note that if the condition is never met, then remaining will be empty, and still a push animation happens
 					setChildWireframes(prefix + [wireframe] + remaining, animated: false, completion: {
 						self.setChildWireframes(prefix + [wireframe], animated: animated, completion: {
 							waiter.fulfil()
