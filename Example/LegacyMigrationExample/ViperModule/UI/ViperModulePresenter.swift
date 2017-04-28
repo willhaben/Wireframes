@@ -18,12 +18,15 @@ class ViperModulePresenter: ViperModuleProtocolsViewToPresenterInterface, ViperM
 		switch identifier {
 			case .pushViper:
 				wireframe?.pushViper()
+			case .pushAdvancedLegacy:
+				wireframe?.pushAdvancedLegacy()
 		}
 	}
 
 	func receivedSomeData() {
 		view?.updateView(withViewModel: ViperModuleViewModel(state: .loaded, buttonModels: [
-		    ButtonModel<ViperModuleButtonIdentifier>(title: "push viper", identifier: .pushViper)
+		    ButtonModel<ViperModuleButtonIdentifier>(title: "push viper", identifier: .pushViper),
+		    ButtonModel<ViperModuleButtonIdentifier>(title: "push advanced legacy", identifier: .pushAdvancedLegacy),
 		]))
 	}
 

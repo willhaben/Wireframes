@@ -54,6 +54,9 @@
 			[self createButtonWithTitle:@"push replacing legacy" action:^(UIButton *button){
 				[weakSelf.wireframe pushSomethingReplacingLastLegacyVCWithTitle:[NSString stringWithFormat:@"%@.L", weakSelf.navigationItem.title]];
 			}],
+			[self createButtonWithTitle:@"pop to viper or push after first MyVC" action:^(UIButton *button){
+				[weakSelf.wireframe popToFirstViperVCOrPopToInsertedMyVCWithTitle:[NSString stringWithFormat:@"%@.L", weakSelf.navigationItem.title]];
+			}],
 	];
 }
 

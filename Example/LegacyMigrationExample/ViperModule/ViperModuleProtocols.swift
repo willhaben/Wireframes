@@ -19,4 +19,5 @@ protocol ViperModuleProtocolsInteractorToPresenterInterface: class {
 
 protocol ViperModuleProtocolsPresenterToWireframeInterface: class {
 	func pushViper()
+	func pushAdvancedLegacy()
 }

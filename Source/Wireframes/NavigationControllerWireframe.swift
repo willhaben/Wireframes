@@ -117,6 +117,12 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 					popWireframe(wireframe, animated: animated, completion: {
 						waiter.fulfil()
 					})
+				case .popTo(let wireframe, let animated):
+					assert(childWireframes.contains(where: { $0 === wireframe }))
+					let prefix = childWireframes.prefix(until: { $0 === wireframe }, findMode: .first, replaceMode: .keepFoundWireframe)
+					setChildWireframes(prefix, animated: animated, completion: {
+						waiter.fulfil()
+					})
 				case .popToFirstChild(let animated):
 					guard let first = childWireframes.first else {
 						assertionFailure()
@@ -132,6 +138,33 @@ open class NavigationControllerWireframe: ViewControllerWireframe, NavigationCon
 					setChildWireframes(wireframes, animated: animated, completion: {
 						waiter.fulfil()
 					})
+				case .findChild(let condition, let findMode, let found, let notFound):
+					func find() -> ViewControllerWireframeInterface? {
+						switch findMode {
+							case .first:
+								return childWireframes.first(where: condition)
+							case .last:
+								return childWireframes.reversed().first(where: condition)
+						}
+					}
+
+					if let foundWireframe = find() {
+						assert(childWireframes.contains(where: { $0 === foundWireframe }))
+						if let command = found(foundWireframe) {
+							return handle(command)
+						}
+						else {
+							return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
+						}
+					}
+					else {
+						if let command = notFound() {
+							return handle(command)
+						}
+						else {
+							return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
+						}
+					}
 			}
 			return .didHandle(completionWaiter: waiter)
 		}

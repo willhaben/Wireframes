@@ -74,8 +74,10 @@ public enum NavigationControllerNavigationCommand: NavigationCommand {
 	case pushWithReplacingCondition(condition: (ViewControllerWireframeInterface) -> Bool, findMode: WireframeFindMode, replaceMode: WireframeReplaceMode, wireframe: ViewControllerWireframeInterface, animated: Bool)
 	case pushWithSimulatedPopAnimationWithReplacingCondition(condition: (ViewControllerWireframeInterface) -> Bool, findMode: WireframeFindMode, replaceMode: WireframeReplaceMode, wireframe: ViewControllerWireframeInterface, animated: Bool)
 	case pop(wireframe: ViewControllerWireframeInterface, animated: Bool)
+	case popTo(wireframe: ViewControllerWireframeInterface, animated: Bool)
 	case popToFirstChild(animated: Bool)
 	case replaceStack(wireframes: [ViewControllerWireframeInterface], animated: Bool)
+	case findChild(condition: (ViewControllerWireframeInterface) -> Bool, findMode: WireframeFindMode, found: (ViewControllerWireframeInterface) -> NavigationControllerNavigationCommand?, notFound: () -> NavigationControllerNavigationCommand?)
 }
 
 public enum WireframeFindMode {

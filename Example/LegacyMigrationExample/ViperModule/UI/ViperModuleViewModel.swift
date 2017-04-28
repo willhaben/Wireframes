@@ -10,6 +10,7 @@ struct ButtonModel<ButtonIdentifier> {
 
 enum ViperModuleButtonIdentifier {
 	case pushViper
+	case pushAdvancedLegacy
 }
 
 enum ViewState {
