@@ -22,6 +22,7 @@ public typealias NavigationCommandSequence = AnySequence<NavigationCommand>
 // TODO other presentation styles
 public enum ModalPresentationStyle {
 	case fullScreen
+	case formSheet
 	case popoverFromBarButton(barButtonItem: UIBarButtonItem, permittedArrowDirections: UIPopoverArrowDirection, willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock?)
 	case popoverFromView(sourceView: UIView, sourceRect: CGRect, permittedArrowDirections: UIPopoverArrowDirection, willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock?)
 
@@ -29,6 +30,8 @@ public enum ModalPresentationStyle {
 		switch self {
 			case .fullScreen:
 				return .fullScreen
+			case .formSheet:
+				return .formSheet
 			case .popoverFromBarButton, .popoverFromView:
 				return .popover
 		}

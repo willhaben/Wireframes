@@ -144,7 +144,7 @@ private extension ViewControllerWireframe {
 			popoverPresentationController?.permittedArrowDirections = permittedArrowDirections
 			wireframe.willRepositionPopoverToRectInViewBlock = willRepositionPopoverToRectInViewBlock
 
-		case .fullScreen:
+		case .fullScreen, .formSheet:
 			// nothing to do
 			break
 		}
