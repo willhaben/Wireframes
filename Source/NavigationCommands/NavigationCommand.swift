@@ -41,11 +41,14 @@ public enum ModalPresentationStyle {
 // TODO other transition styles
 public enum ModalTransitionStyle {
 	case coverVertical
+	case crossDissolve
 
 	func uiModalTransitionStyle() -> UIModalTransitionStyle {
 		switch self {
 		case .coverVertical:
 			return .coverVertical
+		case .crossDissolve:
+			return .crossDissolve
 		}
 	}
 }
