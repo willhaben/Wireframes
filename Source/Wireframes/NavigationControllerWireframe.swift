@@ -4,6 +4,9 @@ import UIKit
 open class NavigationControllerWireframe: ViewControllerWireframe, NavigationControllerWireframeInterface {
 
 	override public var currentlyActiveChildWireframe: WireframeInterface? {
+		if isPresenting {
+			return super.currentlyActiveChildWireframe
+		}
 		return childWireframes.last
 	}
 
