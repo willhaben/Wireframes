@@ -166,8 +166,6 @@ private extension ViewControllerWireframe {
 		presentedWireframe = wireframe
 		wireframe.parentWireframe = self
 		viewController.present(wireframe.viewController, animated: true, completion: {
-			// avoid bar buttons to be clickable when popover is visible
-			wireframe.viewController.popoverPresentationController?.passthroughViews = nil
 			completion()
 		})
 	}
