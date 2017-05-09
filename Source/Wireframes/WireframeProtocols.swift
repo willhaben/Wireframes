@@ -29,10 +29,12 @@ public protocol WireframeInterface: class {
 }
 
 public typealias PopoverWillRepositionPopoverToRectInViewBlock = (UIPopoverPresentationController, UnsafeMutablePointer<CGRect>, AutoreleasingUnsafeMutablePointer<UIView>) -> Void
+public typealias PopoverDidDismissByUserTappingOutsideBlock = () -> Void
 
 public protocol PopoverWireframeInterface: class, UIPopoverPresentationControllerDelegate {
 
 	var willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock? { get set }
+	var popoverDidDismissByUserTappingOutsideBlock: PopoverDidDismissByUserTappingOutsideBlock? { get set }
 
 }
 

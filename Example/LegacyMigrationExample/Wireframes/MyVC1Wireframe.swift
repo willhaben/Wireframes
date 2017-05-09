@@ -38,7 +38,10 @@ class MyVCWireframe: ViewControllerWireframe {
 			let viewFrame = strongSelf.viewController.view.frame
 			rectPointer.pointee = CGRect(x: viewFrame.midX, y: viewFrame.midY, width: 0, height: 0)
 		}
-		dispatch(PresentationControllerNavigationCommand.present(wireframe: nextWF, modalPresentationStyle: .popoverFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: willRepositionPopoverToRectInViewBlock), modalTransitionStyle: .coverVertical, animated: true))
+		let popoverDidDismissByUserTappingOutsideBlock = {
+			NSLog("popover was dismissed by tapping outside")
+		}
+		dispatch(PresentationControllerNavigationCommand.present(wireframe: nextWF, modalPresentationStyle: .popoverFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: willRepositionPopoverToRectInViewBlock, popoverDidDismissByUserTappingOutsideBlock: popoverDidDismissByUserTappingOutsideBlock), modalTransitionStyle: .coverVertical, animated: true))
 	}
 
 	func presentAlert(title: String) {

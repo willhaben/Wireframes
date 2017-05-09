@@ -23,8 +23,8 @@ public typealias NavigationCommandSequence = AnySequence<NavigationCommand>
 public enum ModalPresentationStyle {
 	case fullScreen
 	case formSheet
-	case popoverFromBarButton(barButtonItem: UIBarButtonItem, permittedArrowDirections: UIPopoverArrowDirection, willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock?)
-	case popoverFromView(sourceView: UIView, sourceRect: CGRect, permittedArrowDirections: UIPopoverArrowDirection, willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock?)
+	case popoverFromBarButton(barButtonItem: UIBarButtonItem, permittedArrowDirections: UIPopoverArrowDirection, willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock?, popoverDidDismissByUserTappingOutsideBlock: PopoverDidDismissByUserTappingOutsideBlock?)
+	case popoverFromView(sourceView: UIView, sourceRect: CGRect, permittedArrowDirections: UIPopoverArrowDirection, willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock?, popoverDidDismissByUserTappingOutsideBlock: PopoverDidDismissByUserTappingOutsideBlock?)
 
 	func uiModalPresentationStyle() -> UIModalPresentationStyle {
 		switch self {
