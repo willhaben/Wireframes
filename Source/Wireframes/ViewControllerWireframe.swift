@@ -69,7 +69,7 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 				dismissWireframe(wireframe, animated: animated, completion: {
 					waiter.fulfil()
 				})
-			case .popoverWasDismissedByUserTappingOutside(let wireframe):
+			case .popoverWasDismissedByUserTappingOutside(let wireframe), .activityViewControllerWasDismissed(let wireframe):
 				guard wireframe !== self else {
 					// dismissal should be carried out by presenting wireframe, so it can properly clear its presentedWireframe property => bubble up
 					return .couldNotHandle
@@ -114,6 +114,30 @@ private extension ViewControllerWireframe {
 		}
 
 		assert(viewController.presentedViewController == nil || viewController.presentedViewController?.isBeingDismissed == true, "do not directly use `present` methods on viewController instances")
+
+		// we need to notice when UIActivityViewController gets dismissed
+		// fun fact as: as of iOS 10, `popoverPresentationControllerDidDismissPopover` does NOT get called if `completionWithItemsHandler` is set - which is good in our case, as we only want to dispatch one fixup navigation command - might break in a future iOS version though
+		if let activityViewController = wireframe.viewController as? UIActivityViewController {
+			assert({
+				switch modalPresentationStyle {
+					case .popoverFromBarButton(_, _, _, let popoverDidDismissByUserTappingOutsideBlock):
+						return popoverDidDismissByUserTappingOutsideBlock == nil
+					case .popoverFromView(_, _, _, _, let popoverDidDismissByUserTappingOutsideBlock):
+						return popoverDidDismissByUserTappingOutsideBlock == nil
+
+					case .fullScreen, .formSheet:
+						return true
+				}
+			}(), "popoverDidDismissByUserTappingOutsideBlock will not be called for UIActivityViewController")
+			let originalCompletion = activityViewController.completionWithItemsHandler
+			activityViewController.completionWithItemsHandler = { [weak self, weak wireframe] activityType, completed, returnedItems, activityError in
+				NSLog("completionWithItemsHandler")
+				originalCompletion?(activityType, completed, returnedItems, activityError)
+				if let strongSelf = self, let strongWireframe = wireframe {
+					strongSelf.dispatch(PresentationControllerNavigationCommand.activityViewControllerWasDismissed(wireframe: strongWireframe))
+				}
+			}
+		}
 
 		presentedWireframe = wireframe
 		wireframe.parentWireframe = self

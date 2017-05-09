@@ -47,6 +47,8 @@ class MyVC: UIViewController, Navigatable {
 
 		view.backgroundColor = .white
 
+		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonPressed(sender:)))
+
 		let stackView = UIStackView(arrangedSubviews: createSubviews())
 		stackView.axis = .vertical
 		stackView.alignment = .fill
@@ -66,6 +68,10 @@ class MyVC: UIViewController, Navigatable {
 		DispatchQueue.main.asyncAfter(deadline: when) { [weak self] in
 			self?.loadingState = .loadedFull
 		}
+	}
+
+	private dynamic func shareButtonPressed(sender: UIBarButtonItem) {
+		wireframe?.presentSharing(sender: sender)
 	}
 
 	private func createSubviews() -> [UIView] {

@@ -4,6 +4,11 @@ import Wireframes
 
 class MyVCWireframe: ViewControllerWireframe {
 
+	func presentSharing(sender: UIBarButtonItem) {
+		let wireframe = WireframeFactory.createSharingWireframe()
+		dispatch(PresentationControllerNavigationCommand.present(wireframe: wireframe, modalPresentationStyle: .popoverFromBarButton(barButtonItem: sender, permittedArrowDirections: .up, willRepositionPopoverToRectInViewBlock: nil, popoverDidDismissByUserTappingOutsideBlock: nil), modalTransitionStyle: .coverVertical, animated: true))
+	}
+
 	func pushSomething(title: String) {
 		let nextWF = WireframeFactory.createMyVCWireframe(title: title, configuration: { _ in })
 		dispatch(NavigationControllerNavigationCommand.push(wireframe: nextWF, animated: true))

@@ -67,6 +67,7 @@ public enum PresentationControllerNavigationCommand: NavigationCommand {
 	case presentAlert(wireframe: AlertWireframeInterface)
 	case dismiss(wireframe: ViewControllerWireframeInterface, animated: Bool)
 	case popoverWasDismissedByUserTappingOutside(wireframe: ViewControllerWireframeInterface)
+	case activityViewControllerWasDismissed(wireframe: ViewControllerWireframeInterface)
 	case alertWasDismissed(wireframe: AlertWireframeInterface)
 }
 

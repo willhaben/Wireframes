@@ -7,6 +7,7 @@ private typealias TaggingBlocks = WireframeFactory
 private typealias ViperModule = WireframeFactory
 private typealias MyVCCreation = WireframeFactory
 private typealias AlertCreation = WireframeFactory
+private typealias SharingCreation = WireframeFactory
 
 
 class WireframeFactory: NSObject {
@@ -101,6 +102,17 @@ extension AlertCreation {
 		}))
 		let wireframe = AlertWireframe(alertController: alertController)
 		alertController.wireframe = wireframe
+		return wireframe
+	}
+
+}
+
+
+extension SharingCreation {
+
+	class func createSharingWireframe() -> ViewControllerWireframeInterface {
+		let sharingController = UIActivityViewController(activityItems: ["share me"], applicationActivities: nil)
+		let wireframe = ViewControllerWireframe(viewController: sharingController)
 		return wireframe
 	}
 
