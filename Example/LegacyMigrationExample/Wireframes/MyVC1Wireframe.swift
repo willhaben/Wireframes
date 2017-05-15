@@ -49,9 +49,18 @@ class MyVCWireframe: ViewControllerWireframe {
 		dispatch(PresentationControllerNavigationCommand.present(wireframe: nextWF, modalPresentationStyle: .popoverFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: willRepositionPopoverToRectInViewBlock, popoverDidDismissByUserTappingOutsideBlock: popoverDidDismissByUserTappingOutsideBlock), modalTransitionStyle: .coverVertical, animated: true))
 	}
 
-	func presentAlert(title: String) {
-		let alertWF = WireframeFactory.createAlertWireframe(title: title)
-		AppDelegate.shared.rootWireframe.dispatch(PresentationControllerNavigationCommand.presentAlert(wireframe: alertWF))
+	func presentActionSheet(title: String, sourceView: UIView) {
+		let alertWF = WireframeFactory.createAlertWireframe(title: title, preferredStyle: .actionSheet)
+		let willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock = { [weak self] _, rectPointer, viewPointer in
+			guard let strongSelf = self else { return }
+			let viewFrame = strongSelf.viewController.view.frame
+			rectPointer.pointee = CGRect(x: viewFrame.midX, y: viewFrame.midY, width: 0, height: 0)
+		}
+		let popoverDidDismissByUserTappingOutsideBlock = {
+			NSLog("popover was dismissed by tapping outside")
+		}
+		let popoverConfiguration = PopoverConfiguration.presentedFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: willRepositionPopoverToRectInViewBlock, popoverDidDismissByUserTappingOutsideBlock: popoverDidDismissByUserTappingOutsideBlock)
+		AppDelegate.shared.rootWireframe.dispatch(PresentationControllerNavigationCommand.presentActionSheet(wireframe: alertWF, popoverConfiguration: popoverConfiguration))
 	}
 
 	func dismiss() {

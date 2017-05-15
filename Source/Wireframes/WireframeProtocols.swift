@@ -6,7 +6,9 @@ import UIKit
 public protocol TabBarControllerWireframeInterface: class, WireframeInterface, UITabBarControllerDelegate {}
 public protocol NavigationControllerWireframeInterface: class, ViewControllerWireframeInterface, UINavigationControllerDelegate {}
 public protocol ViewControllerWireframeInterface: class, WireframeInterface, PopoverWireframeInterface, NavigationChildWireframeInterface {}
-public protocol AlertWireframeInterface: class, WireframeInterface {}
+public protocol AlertWireframeInterface: class, WireframeInterface, PopoverWireframeInterface {
+	var alertControllerStyle: UIAlertControllerStyle { get }
+}
 
 public protocol WireframeInterface: class {
 

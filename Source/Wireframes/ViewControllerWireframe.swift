@@ -49,11 +49,21 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 					waiter.fulfil()
 				})
 			case .presentAlert(let wireframe):
+				assert(wireframe.alertControllerStyle == .alert)
 				guard presentedWireframe == nil, (viewController.presentedViewController == nil || viewController.presentedViewController?.isBeingDismissed == true) else {
 					// presenting should be bubbled down to first wireframe that is not presenting anything - notice that viewController.presentedViewController returns any decendant presented viewcontroller, not just direct children
 					return .couldNotHandle
 				}
-				presentAlertWireframe(wireframe, completion: {
+				presentAlertWireframe(wireframe, popoverConfiguration: nil, completion: {
+					waiter.fulfil()
+				})
+			case .presentActionSheet(let wireframe, let popoverConfiguration):
+				assert(wireframe.alertControllerStyle == .actionSheet)
+				guard presentedWireframe == nil, (viewController.presentedViewController == nil || viewController.presentedViewController?.isBeingDismissed == true) else {
+					// presenting should be bubbled down to first wireframe that is not presenting anything - notice that viewController.presentedViewController returns any decendant presented viewcontroller, not just direct children
+					return .couldNotHandle
+				}
+				presentAlertWireframe(wireframe, popoverConfiguration: popoverConfiguration, completion: {
 					waiter.fulfil()
 				})
 			case .dismiss(let wireframe, let animated):
@@ -177,7 +187,7 @@ private extension ViewControllerWireframe {
 		}
 	}
 
-	func presentAlertWireframe(_ wireframe: AlertWireframeInterface, completion: @escaping () -> Void) {
+	func presentAlertWireframe(_ wireframe: AlertWireframeInterface, popoverConfiguration: PopoverConfiguration?, completion: @escaping () -> Void) {
 		guard wireframe.viewController is WFAlertController else {
 			assertionFailure("UIAlertController not supported, use WFAlertController")
 			// still need to call completion, as this method does not have any means to report an error
@@ -185,13 +195,46 @@ private extension ViewControllerWireframe {
 			return
 		}
 
+		assert({
+			if wireframe.alertControllerStyle == .actionSheet {
+				return popoverConfiguration != nil
+			}
+			return true
+		}())
 		assert(viewController.presentedViewController == nil || viewController.presentedViewController?.isBeingDismissed == true, "do not directly use `present` methods on viewController instances")
 
 		presentedWireframe = wireframe
 		wireframe.parentWireframe = self
 		viewController.present(wireframe.viewController, animated: true, completion: {
+			// avoid bar buttons to be clickable when popover is visible
+			wireframe.viewController.popoverPresentationController?.passthroughViews = nil
 			completion()
 		})
+
+		if let popoverConfiguration = popoverConfiguration, wireframe.viewController.popoverPresentationController != nil {
+			switch popoverConfiguration {
+				case .presentedFromBarButton(let barButtonItem, let permittedArrowDirections, let willRepositionPopoverToRectInViewBlock, let popoverDidDismissByUserTappingOutsideBlock):
+					let popoverPresentationController = wireframe.viewController.popoverPresentationController
+					assert(popoverPresentationController != nil)
+					// the wireframe which owns the viewcontroller presented in a popover is the delegate of the popoverPresentationController, as it manages the popoverPresentationController
+					popoverPresentationController?.delegate = wireframe
+					popoverPresentationController?.barButtonItem = barButtonItem
+					popoverPresentationController?.permittedArrowDirections = permittedArrowDirections
+					wireframe.willRepositionPopoverToRectInViewBlock = willRepositionPopoverToRectInViewBlock
+					wireframe.popoverDidDismissByUserTappingOutsideBlock = popoverDidDismissByUserTappingOutsideBlock
+
+				case .presentedFromView(let sourceView, let sourceRect, let permittedArrowDirections, let willRepositionPopoverToRectInViewBlock, let popoverDidDismissByUserTappingOutsideBlock):
+					let popoverPresentationController = wireframe.viewController.popoverPresentationController
+					assert(popoverPresentationController != nil)
+					// the wireframe which owns the viewcontroller presented in a popover is the delegate of the popoverPresentationController, as it manages the popoverPresentationController
+					popoverPresentationController?.delegate = wireframe
+					popoverPresentationController?.sourceView = sourceView
+					popoverPresentationController?.sourceRect = sourceRect
+					popoverPresentationController?.permittedArrowDirections = permittedArrowDirections
+					wireframe.willRepositionPopoverToRectInViewBlock = willRepositionPopoverToRectInViewBlock
+					wireframe.popoverDidDismissByUserTappingOutsideBlock = popoverDidDismissByUserTappingOutsideBlock
+			}
+		}
 	}
 
 	func dismissWireframe(_ wireframe: ViewControllerWireframeInterface, animated: Bool, completion: @escaping () -> Void) {

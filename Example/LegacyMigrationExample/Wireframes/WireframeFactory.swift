@@ -92,8 +92,8 @@ extension MyVCCreation {
 
 extension AlertCreation {
 
-	class func createAlertWireframe(title: String) -> AlertWireframe {
-		let alertController = WFAlertController(title: title, message: "message", preferredStyle: .alert)
+	class func createAlertWireframe(title: String, preferredStyle: UIAlertControllerStyle) -> AlertWireframe {
+		let alertController = WFAlertController(title: title, message: "message", preferredStyle: preferredStyle)
 		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
 			NSLog("cancelled WFAlertController")
 		}))

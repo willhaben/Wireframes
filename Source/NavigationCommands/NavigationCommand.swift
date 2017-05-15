@@ -38,6 +38,11 @@ public enum ModalPresentationStyle {
 	}
 }
 
+public enum PopoverConfiguration {
+	case presentedFromBarButton(barButtonItem: UIBarButtonItem, permittedArrowDirections: UIPopoverArrowDirection, willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock?, popoverDidDismissByUserTappingOutsideBlock: PopoverDidDismissByUserTappingOutsideBlock?)
+	case presentedFromView(sourceView: UIView, sourceRect: CGRect, permittedArrowDirections: UIPopoverArrowDirection, willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock?, popoverDidDismissByUserTappingOutsideBlock: PopoverDidDismissByUserTappingOutsideBlock?)
+}
+
 // TODO other transition styles
 public enum ModalTransitionStyle {
 	case coverVertical
@@ -65,6 +70,7 @@ public enum KeyboardDismissNavigationCommand: NavigationCommand {
 public enum PresentationControllerNavigationCommand: NavigationCommand {
 	case present(wireframe: ViewControllerWireframeInterface, modalPresentationStyle: ModalPresentationStyle, modalTransitionStyle: ModalTransitionStyle, animated: Bool)
 	case presentAlert(wireframe: AlertWireframeInterface)
+	case presentActionSheet(wireframe: AlertWireframeInterface, popoverConfiguration: PopoverConfiguration)
 	case dismiss(wireframe: ViewControllerWireframeInterface, animated: Bool)
 	case popoverWasDismissedByUserTappingOutside(wireframe: ViewControllerWireframeInterface)
 	case activityViewControllerWasDismissed(wireframe: ViewControllerWireframeInterface)
