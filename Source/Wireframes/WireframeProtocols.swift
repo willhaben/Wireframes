@@ -37,6 +37,7 @@ public protocol PopoverWireframeInterface: class, UIPopoverPresentationControlle
 
 	var willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock? { get set }
 	var popoverDidDismissByUserTappingOutsideBlock: PopoverDidDismissByUserTappingOutsideBlock? { get set }
+	var popoverPresentationController: UIPopoverPresentationController? { get }
 
 }
 

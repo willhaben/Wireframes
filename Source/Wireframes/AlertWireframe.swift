@@ -25,6 +25,9 @@ open class AlertWireframe: NSObject, AlertWireframeInterface {
 
 	public var willRepositionPopoverToRectInViewBlock: PopoverWillRepositionPopoverToRectInViewBlock? = nil
 	public var popoverDidDismissByUserTappingOutsideBlock: PopoverDidDismissByUserTappingOutsideBlock? = nil
+	public var popoverPresentationController: UIPopoverPresentationController? {
+		return viewController.popoverPresentationController
+	}
 
 	public init(alertController: WFAlertController) {
 		self.alertController = alertController
