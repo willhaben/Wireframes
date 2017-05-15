@@ -130,9 +130,9 @@ private extension ViewControllerWireframe {
 		if let activityViewController = wireframe.viewController as? UIActivityViewController {
 			assert({
 				switch modalPresentationStyle {
-					case .popoverFromBarButton(_, _, _, let popoverDidDismissByUserTappingOutsideBlock):
+					case .popover(.presentedFromBarButton(_, _, _, let popoverDidDismissByUserTappingOutsideBlock)):
 						return popoverDidDismissByUserTappingOutsideBlock == nil
-					case .popoverFromView(_, _, _, _, let popoverDidDismissByUserTappingOutsideBlock):
+					case .popover(.presentedFromView(_, _, _, _, let popoverDidDismissByUserTappingOutsideBlock)):
 						return popoverDidDismissByUserTappingOutsideBlock == nil
 
 					case .fullScreen, .formSheet:
@@ -160,7 +160,7 @@ private extension ViewControllerWireframe {
 		})
 
 		switch modalPresentationStyle {
-		case .popoverFromBarButton(let barButtonItem, let permittedArrowDirections, let willRepositionPopoverToRectInViewBlock, let popoverDidDismissByUserTappingOutsideBlock):
+		case .popover(.presentedFromBarButton(let barButtonItem, let permittedArrowDirections, let willRepositionPopoverToRectInViewBlock, let popoverDidDismissByUserTappingOutsideBlock)):
 			let popoverPresentationController = wireframe.viewController.popoverPresentationController
 			assert(popoverPresentationController != nil)
 			// the wireframe which owns the viewcontroller presented in a popover is the delegate of the popoverPresentationController, as it manages the popoverPresentationController
@@ -170,7 +170,7 @@ private extension ViewControllerWireframe {
 			wireframe.willRepositionPopoverToRectInViewBlock = willRepositionPopoverToRectInViewBlock
 			wireframe.popoverDidDismissByUserTappingOutsideBlock = popoverDidDismissByUserTappingOutsideBlock
 
-		case .popoverFromView(let sourceView, let sourceRect, let permittedArrowDirections, let willRepositionPopoverToRectInViewBlock, let popoverDidDismissByUserTappingOutsideBlock):
+		case .popover(.presentedFromView(let sourceView, let sourceRect, let permittedArrowDirections, let willRepositionPopoverToRectInViewBlock, let popoverDidDismissByUserTappingOutsideBlock)):
 			let popoverPresentationController = wireframe.viewController.popoverPresentationController
 			assert(popoverPresentationController != nil)
 			// the wireframe which owns the viewcontroller presented in a popover is the delegate of the popoverPresentationController, as it manages the popoverPresentationController

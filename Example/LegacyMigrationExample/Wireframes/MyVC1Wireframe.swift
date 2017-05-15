@@ -6,7 +6,7 @@ class MyVCWireframe: ViewControllerWireframe {
 
 	func presentSharing(sender: UIBarButtonItem) {
 		let wireframe = WireframeFactory.createSharingWireframe()
-		dispatch(PresentationControllerNavigationCommand.present(wireframe: wireframe, modalPresentationStyle: .popoverFromBarButton(barButtonItem: sender, permittedArrowDirections: .up, willRepositionPopoverToRectInViewBlock: nil, popoverDidDismissByUserTappingOutsideBlock: nil), modalTransitionStyle: .coverVertical, animated: true))
+		dispatch(PresentationControllerNavigationCommand.present(wireframe: wireframe, modalPresentationStyle: .popover(configuration: .presentedFromBarButton(barButtonItem: sender, permittedArrowDirections: .up, willRepositionPopoverToRectInViewBlock: nil, popoverDidDismissByUserTappingOutsideBlock: nil)), modalTransitionStyle: .coverVertical, animated: true))
 	}
 
 	func pushSomething(title: String) {
@@ -46,7 +46,7 @@ class MyVCWireframe: ViewControllerWireframe {
 		let popoverDidDismissByUserTappingOutsideBlock = {
 			NSLog("popover was dismissed by tapping outside")
 		}
-		dispatch(PresentationControllerNavigationCommand.present(wireframe: nextWF, modalPresentationStyle: .popoverFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: willRepositionPopoverToRectInViewBlock, popoverDidDismissByUserTappingOutsideBlock: popoverDidDismissByUserTappingOutsideBlock), modalTransitionStyle: .coverVertical, animated: true))
+		dispatch(PresentationControllerNavigationCommand.present(wireframe: nextWF, modalPresentationStyle: .popover(configuration: .presentedFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: willRepositionPopoverToRectInViewBlock, popoverDidDismissByUserTappingOutsideBlock: popoverDidDismissByUserTappingOutsideBlock)), modalTransitionStyle: .coverVertical, animated: true))
 	}
 
 	func presentActionSheet(title: String, sourceView: UIView) {
