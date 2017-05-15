@@ -56,10 +56,7 @@ class MyVCWireframe: ViewControllerWireframe {
 			let viewFrame = strongSelf.viewController.view.frame
 			rectPointer.pointee = CGRect(x: viewFrame.midX, y: viewFrame.midY, width: 0, height: 0)
 		}
-		let popoverDidDismissByUserTappingOutsideBlock = {
-			NSLog("popover was dismissed by tapping outside")
-		}
-		let popoverConfiguration = PopoverConfiguration.presentedFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: willRepositionPopoverToRectInViewBlock, popoverDidDismissByUserTappingOutsideBlock: popoverDidDismissByUserTappingOutsideBlock)
+		let popoverConfiguration = PopoverConfiguration.presentedFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: willRepositionPopoverToRectInViewBlock, popoverDidDismissByUserTappingOutsideBlock: nil)
 		AppDelegate.shared.rootWireframe.dispatch(PresentationControllerNavigationCommand.presentActionSheet(wireframe: alertWF, popoverConfiguration: popoverConfiguration))
 	}
 

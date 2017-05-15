@@ -51,7 +51,7 @@ extension AlertWireframe: UIPopoverPresentationControllerDelegate {
 
 	public func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
 		// INFO: do NOT dispatch .popoverWasDismissedByUserTappingOutside, as the WFAlertController will dispatch .alertWasDismissed already
-		popoverDidDismissByUserTappingOutsideBlock?()
+		// INFO: do NOT call popoverDidDismissByUserTappingOutsideBlock, as UIAlertController will call this delegate also when pressing an action button
 	}
 
 	public func popoverPresentationController(_ popoverPresentationController: UIPopoverPresentationController, willRepositionPopoverTo rect: UnsafeMutablePointer<CGRect>, in view: AutoreleasingUnsafeMutablePointer<UIView>) {

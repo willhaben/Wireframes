@@ -197,6 +197,12 @@ private extension ViewControllerWireframe {
 		})
 
 		if let popoverConfiguration = popoverConfiguration, wireframe.viewController.popoverPresentationController != nil {
+			assert({
+				switch popoverConfiguration {
+					case .presentedFromView(_, _, _, _, let popoverDidDismissByUserTappingOutsideBlock), .presentedFromBarButton(_, _, _, let popoverDidDismissByUserTappingOutsideBlock):
+						return popoverDidDismissByUserTappingOutsideBlock == nil
+				}
+			}(), "popoverDidDismissByUserTappingOutsideBlock not supported for UIAlertController")
 			configurePopover(configuration: popoverConfiguration, wireframe: wireframe)
 		}
 	}
