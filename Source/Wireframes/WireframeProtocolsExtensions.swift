@@ -100,14 +100,19 @@ public extension WireframeInterface {
 					case (.up, .some(let parentWireframe), _):
 						// bubble up remaining commands
 						parentWireframe.handle(navigationCommandSequence, bubbleRemaining: .up, wholeSequenceWaiter: wholeSequenceWaiter)
+						return
 
 					case (.up, .none, .some(let childWireframe)), (.down, _, .some(let childWireframe)):
 						// bubbling up and no parentWireframe => bubble down
 						// bubbling down => keep bubbling down
 						childWireframe.handle(navigationCommandSequence, bubbleRemaining: .down, wholeSequenceWaiter: wholeSequenceWaiter)
+						return
 
 					case (.up, _, _), (.down, _, _):
 						assertionFailure("could not handle remaining NavigationCommandSequence \(navigationCommandSequence)")
+						// still fulfill waiter, so dispatch call gets some closure
+						wholeSequenceWaiter.fulfil()
+						return
 				}
 
 			case .didHandle(let completionWaiter):
@@ -123,6 +128,7 @@ public extension WireframeInterface {
 					let remainingNavigationCommandSequence = navigationCommandSequence.dropFirst()
 					strongSelf.handle(remainingNavigationCommandSequence, bubbleRemaining: bubbleDirection, wholeSequenceWaiter: wholeSequenceWaiter)
 				})
+				return
 		}
 	}
 
