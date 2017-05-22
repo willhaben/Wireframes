@@ -111,7 +111,7 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 
 private extension ViewControllerWireframe {
 
-	func presentWireframe(_ wireframe: ViewControllerWireframeInterface, modalPresentationStyle: ModalPresentationStyle, modalTransitionStyle: ModalTransitionStyle, animated: Bool, completion: @escaping () -> Void) {
+	func presentWireframe(_ wireframe: PresentableWireframeInterface, modalPresentationStyle: ModalPresentationStyle, modalTransitionStyle: ModalTransitionStyle, animated: Bool, completion: @escaping () -> Void) {
 		guard presentedWireframe == nil else {
 			assertionFailure("cannot present, already presenting")
 			// still need to call completion, as this method does not have any means to report an error
@@ -232,7 +232,7 @@ private extension ViewControllerWireframe {
 		}
 	}
 
-	func dismissWireframe(_ wireframe: ViewControllerWireframeInterface, animated: Bool, completion: @escaping () -> Void) {
+	func dismissWireframe(_ wireframe: PresentableWireframeInterface, animated: Bool, completion: @escaping () -> Void) {
 		guard let presentedWireframe = presentedWireframe, wireframe === presentedWireframe else {
 			assertionFailure()
 			// still need to call completion, as this method does not have any means to report an error

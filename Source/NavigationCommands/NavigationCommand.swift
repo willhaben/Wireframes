@@ -67,12 +67,12 @@ public enum KeyboardDismissNavigationCommand: NavigationCommand {
 }
 
 public enum PresentationControllerNavigationCommand: NavigationCommand {
-	case present(wireframe: ViewControllerWireframeInterface, modalPresentationStyle: ModalPresentationStyle, modalTransitionStyle: ModalTransitionStyle, animated: Bool)
+	case present(wireframe: PresentableWireframeInterface, modalPresentationStyle: ModalPresentationStyle, modalTransitionStyle: ModalTransitionStyle, animated: Bool)
 	case presentAlert(wireframe: AlertWireframeInterface)
 	case presentActionSheet(wireframe: AlertWireframeInterface, popoverConfiguration: PopoverConfiguration)
-	case dismiss(wireframe: ViewControllerWireframeInterface, animated: Bool)
-	case popoverWasDismissedByUserTappingOutside(wireframe: ViewControllerWireframeInterface)
-	case activityViewControllerWasDismissed(wireframe: ViewControllerWireframeInterface)
+	case dismiss(wireframe: PresentableWireframeInterface, animated: Bool)
+	case popoverWasDismissedByUserTappingOutside(wireframe: PresentableWireframeInterface)
+	case activityViewControllerWasDismissed(wireframe: PresentableWireframeInterface)
 	case alertWasDismissed(wireframe: AlertWireframeInterface)
 }
 
