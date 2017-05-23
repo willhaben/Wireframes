@@ -107,4 +107,9 @@ class MyVCWireframe: ViewControllerWireframe {
 		dispatch(NavigationControllerNavigationCommand.push(wireframe: wireframe, animated: true))
 	}
 
+	func presentSafari(sourceView: UIView) {
+		let wireframe = WireframeFactory.createSafariWireframe()
+		dispatch(PresentationControllerNavigationCommand.present(wireframe: wireframe, modalPresentationStyle: .popover(configuration: .presentedFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: nil, popoverDidDismissByUserTappingOutsideBlock: nil)), modalTransitionStyle: .coverVertical, animated: true))
+	}
+
 }

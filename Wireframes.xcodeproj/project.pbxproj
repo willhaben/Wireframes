@@ -18,6 +18,7 @@
 		1FFDDDAE1E9224F40003E8C4 /* WireframeProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFDDD991E9224F40003E8C4 /* WireframeProtocols.swift */; };
 		AAD7B1981EC0AA6D00BB3844 /* NavBarConfigurable.h in Headers */ = {isa = PBXBuildFile; fileRef = AAD7B1971EC0AA6D00BB3844 /* NavBarConfigurable.h */; };
 		B393504E77270D12533368F9 /* DumbWaiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B393537BD663E2C47514967F /* DumbWaiter.swift */; };
+		B39351833687C5DFF623BF17 /* SafariWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3935598BB9256DEC11804C5 /* SafariWireframe.swift */; };
 		B39351E8D3445CF6A963C9BA /* AlertWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3935DF498026D2B755850A1 /* AlertWireframe.swift */; };
 		B39353F31436A9C50853DF73 /* WFAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3935A1398BE8EDD6AC27789 /* WFAlertController.swift */; };
 		B39355167D997742792319EF /* UIResponder+WFResignFirstResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B393562458D4F47DC7B43A00 /* UIResponder+WFResignFirstResponder.swift */; };
@@ -49,6 +50,7 @@
 		1FFDDD991E9224F40003E8C4 /* WireframeProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WireframeProtocols.swift; sourceTree = "<group>"; };
 		AAD7B1971EC0AA6D00BB3844 /* NavBarConfigurable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavBarConfigurable.h; sourceTree = "<group>"; };
 		B393537BD663E2C47514967F /* DumbWaiter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DumbWaiter.swift; sourceTree = "<group>"; };
+		B3935598BB9256DEC11804C5 /* SafariWireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariWireframe.swift; sourceTree = "<group>"; };
 		B393562458D4F47DC7B43A00 /* UIResponder+WFResignFirstResponder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIResponder+WFResignFirstResponder.swift"; sourceTree = "<group>"; };
 		B3935A1398BE8EDD6AC27789 /* WFAlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WFAlertController.swift; sourceTree = "<group>"; };
 		B3935DF498026D2B755850A1 /* AlertWireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertWireframe.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				B4D89F8399437C1F82490536 /* WireframeProtocolsExtensions.swift */,
 				B393537BD663E2C47514967F /* DumbWaiter.swift */,
 				B3935DF498026D2B755850A1 /* AlertWireframe.swift */,
+				B3935598BB9256DEC11804C5 /* SafariWireframe.swift */,
 			);
 			name = DefaultWireframes;
 			path = Wireframes;
@@ -280,6 +283,7 @@
 				B393504E77270D12533368F9 /* DumbWaiter.swift in Sources */,
 				B39353F31436A9C50853DF73 /* WFAlertController.swift in Sources */,
 				B39351E8D3445CF6A963C9BA /* AlertWireframe.swift in Sources */,
+				B39351833687C5DFF623BF17 /* SafariWireframe.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

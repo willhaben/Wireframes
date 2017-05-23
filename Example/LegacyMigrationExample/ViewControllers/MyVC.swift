@@ -49,19 +49,30 @@ class MyVC: UIViewController, Navigatable {
 
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonPressed(sender:)))
 
+		let scrollView = UIScrollView()
+		view.addSubview(scrollView)
+
 		let stackView = UIStackView(arrangedSubviews: createSubviews())
 		stackView.axis = .vertical
 		stackView.alignment = .fill
 		stackView.distribution = .fillProportionally
-		view.addSubview(stackView)
+		scrollView.addSubview(stackView)
+
+		scrollView.translatesAutoresizingMaskIntoConstraints = false
+		NSLayoutConstraint.activate([
+				self.view.leftAnchor.constraint(equalTo: scrollView.leftAnchor),
+				self.view.rightAnchor.constraint(equalTo: scrollView.rightAnchor),
+				self.view.topAnchor.constraint(equalTo: scrollView.topAnchor),
+				self.view.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+		])
 
 		stackView.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([
-				self.view.leftAnchor.constraint(equalTo: stackView.leftAnchor),
-				self.view.rightAnchor.constraint(equalTo: stackView.rightAnchor),
-				self.view.topAnchor.constraint(lessThanOrEqualTo: stackView.topAnchor),
-				self.view.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor),
-				self.view.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
+				scrollView.leftAnchor.constraint(equalTo: stackView.leftAnchor),
+				scrollView.rightAnchor.constraint(equalTo: stackView.rightAnchor),
+				scrollView.topAnchor.constraint(equalTo: stackView.topAnchor),
+				scrollView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
+				scrollView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
 		])
 
 		let when = DispatchTime.now() + 1 // seconds
@@ -92,6 +103,7 @@ class MyVC: UIViewController, Navigatable {
 				createButton(title: "push and switch tab and push", action: { [weak self] _ in self?.wireframe?.pushAndSwitchAndPush() }),
 				createButton(title: "push legacy", action: { [weak self] _ in self?.wireframe?.pushLegacy() }),
 				createButton(title: "push viper", action: { [weak self] _ in self?.wireframe?.pushViper() }),
+				createButton(title: "present safari", action: { [weak self] sender in self?.wireframe?.presentSafari(sourceView: sender) }),
 				createTextField(),
 		]
 	}

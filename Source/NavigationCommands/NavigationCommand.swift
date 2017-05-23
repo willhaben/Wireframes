@@ -74,6 +74,7 @@ public enum PresentationControllerNavigationCommand: NavigationCommand {
 	case popoverWasDismissedByUserTappingOutside(wireframe: PresentableWireframeInterface)
 	case activityViewControllerWasDismissed(wireframe: PresentableWireframeInterface)
 	case alertWasDismissed(wireframe: AlertWireframeInterface)
+	case safariViewControllerIsBeingDismissed(wireframe: SafariWireframe)
 }
 
 public enum GlobalPresentationControllerNavigationCommand: NavigationCommand {

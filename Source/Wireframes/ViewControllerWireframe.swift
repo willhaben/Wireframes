@@ -102,6 +102,16 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 
 				presentedWireframe = nil
 				waiter.fulfil()
+			case .safariViewControllerIsBeingDismissed(let wireframe):
+				guard wireframe !== self else {
+					// dismissal should be carried out by presenting wireframe, so it can properly clear its presentedWireframe property => bubble up
+					return .couldNotHandle
+				}
+
+				assert(wireframe === presentedWireframe)
+
+				presentedWireframe = nil
+				waiter.fulfil()
 		}
 
 		return .didHandle(completionWaiter: waiter)

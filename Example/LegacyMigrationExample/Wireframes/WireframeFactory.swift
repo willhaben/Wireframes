@@ -1,4 +1,5 @@
 import Wireframes
+import SafariServices
 
 
 private typealias TabBarWireframeCreation = WireframeFactory
@@ -8,6 +9,7 @@ private typealias ViperModule = WireframeFactory
 private typealias MyVCCreation = WireframeFactory
 private typealias AlertCreation = WireframeFactory
 private typealias SharingCreation = WireframeFactory
+private typealias SafariCreation = WireframeFactory
 
 
 class WireframeFactory: NSObject {
@@ -113,6 +115,17 @@ extension SharingCreation {
 	class func createSharingWireframe() -> ViewControllerWireframeInterface {
 		let sharingController = UIActivityViewController(activityItems: ["share me"], applicationActivities: nil)
 		let wireframe = ViewControllerWireframe(viewController: sharingController)
+		return wireframe
+	}
+
+}
+
+
+extension SafariCreation {
+
+	class func createSafariWireframe() -> SafariWireframe {
+		let safariVC = SFSafariViewController(url: URL(string: "https://github.com/willhaben/Wireframes")!)
+		let wireframe = SafariWireframe(safariViewController: safariVC)
 		return wireframe
 	}
 

@@ -9,6 +9,7 @@ public protocol ViewControllerWireframeInterface: class, WireframeInterface, Pop
 public protocol AlertWireframeInterface: class, WireframeInterface, PopoverWireframeInterface {
 	var alertControllerStyle: UIAlertControllerStyle { get }
 }
+public protocol SafariWireframeInterface: class, WireframeInterface, PopoverWireframeInterface {}
 public typealias PresentableWireframeInterface = WireframeInterface & PopoverWireframeInterface
 
 public protocol WireframeInterface: class {
