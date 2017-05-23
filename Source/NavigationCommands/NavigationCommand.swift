@@ -105,6 +105,7 @@ public enum WireframeReplaceMode {
 
 public enum TabBarControllerNavigationCommand: NavigationCommand {
 	case switchTab(toWireframeWithTag: WireframeTag)
+	case switchTabToViewController(viewController: UIViewController)
 	case cycleTabs()
 	case replaceTabs(wireframesAndTags: [(ViewControllerWireframeInterface, WireframeTag)], selectedTag: WireframeTag)
 }

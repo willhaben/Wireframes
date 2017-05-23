@@ -31,15 +31,12 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 	// TODO animation
 	private var childWireframesAndTags: [(ViewControllerWireframeInterface, WireframeTag)] = [] {
 		didSet {
-			lastNavigationState = nil
 			tabBarController.viewControllers = childWireframesAndTags.map({ (wireframe, _) in wireframe.viewController })
 			childWireframesAndTags.forEach { (wireframe, _) in
 				wireframe.parentWireframe = self
 			}
 		}
 	}
-
-	fileprivate var lastNavigationState: NavigationStateInterface? = nil
 
 	/** IMPORTANT
 		from this point on this Wireframe manages the UITabBarController instance
@@ -69,7 +66,15 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 				}
 
 				showTab(index)
-				lastNavigationState = nil
+
+			case .switchTabToViewController(let viewController):
+				guard let (wireframe, _) = childWireframesAndTags.first(where: { (wireframe, _) in
+					return wireframe.viewController === viewController
+				}) else {
+					return .couldNotHandle
+				}
+
+				showTab(wireframe)
 
 			case .cycleTabs:
 				guard let vcs = tabBarController.viewControllers, vcs.count > 0 else {
@@ -78,7 +83,6 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 				}
 
 				showTab((tabBarController.selectedIndex + 1) % vcs.count)
-				lastNavigationState = nil
 
 			case .replaceTabs(let wireframesAndTags, let selectedTag):
 				guard let wireframeAndTag = wireframesAndTags.first(where: { (wireframe, tag) in return tag.equals(selectedTag) }) else {
@@ -89,7 +93,6 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 				childWireframesAndTags = wireframesAndTags
 				let (wireframe, _) = wireframeAndTag
 				tabBarController.selectedViewController = wireframe.viewController
-				lastNavigationState = nil
 		}
 
 		return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
@@ -104,23 +107,46 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 		tabBarController.selectedIndex = index
 	}
 
+	private func showTab(_ wireframe: ViewControllerWireframeInterface) {
+		guard tabBarController.viewControllers?.contains(wireframe.viewController) ?? false else {
+			assertionFailure("viewController not contained in tabBarController")
+			return
+		}
+
+		tabBarController.selectedViewController = wireframe.viewController
+	}
+
+	fileprivate func wireframe(for viewController: UIViewController) -> ViewControllerWireframeInterface? {
+		guard let (wireframe, _) = childWireframesAndTags.first(where: { (wireframe, _) in
+			return wireframe.viewController === viewController
+		}) else {
+			assertionFailure()
+			return nil
+		}
+
+		return wireframe
+	}
+
 }
 
 extension TabBarControllerWireframe: UITabBarControllerDelegate {
 
 	public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-		let shouldSelect = true
-		if shouldSelect {
-			self.lastNavigationState = currentNavigationState()
+		// never let tabbarcontroller execute the switch, rather do it programmatically by dispatching navigation command in order to avoid uikitDidChangeNavigationState being dispatched too often when popToRootViewController is executed on a navigation controller
+		DispatchQueue.main.async {
+			if viewController == tabBarController.selectedViewController, let navWireframe = self.wireframe(for: viewController) as? NavigationControllerWireframe {
+				assert(viewController is UINavigationController)
+				navWireframe.dispatch(NavigationControllerNavigationCommand.popToFirstChild(animated: true))
+			}
+			else {
+				self.dispatch(TabBarControllerNavigationCommand.switchTabToViewController(viewController: viewController))
+			}
 		}
-		return shouldSelect
+		return false
 	}
 
 	public func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-		if let lastNavigationState = lastNavigationState {
-			dispatch(UIKitNavigationCommand.uikitDidChangeNavigationState(previousNavigationState: lastNavigationState))
-			self.lastNavigationState = nil
-		}
+		assertionFailure()
 	}
 
 }
