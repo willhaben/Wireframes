@@ -22,6 +22,7 @@
 		B39351E8D3445CF6A963C9BA /* AlertWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3935DF498026D2B755850A1 /* AlertWireframe.swift */; };
 		B39353F31436A9C50853DF73 /* WFAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3935A1398BE8EDD6AC27789 /* WFAlertController.swift */; };
 		B39355167D997742792319EF /* UIResponder+WFResignFirstResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B393562458D4F47DC7B43A00 /* UIResponder+WFResignFirstResponder.swift */; };
+		B3935830D52E563DE77FD6D0 /* UIViewController+VisibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3935E0975C12062BB0305FC /* UIViewController+VisibleViewController.swift */; };
 		B4D89F04CA6C3110FFECDF78 /* WireframeProtocolsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D89F8399437C1F82490536 /* WireframeProtocolsExtensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +55,7 @@
 		B393562458D4F47DC7B43A00 /* UIResponder+WFResignFirstResponder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIResponder+WFResignFirstResponder.swift"; sourceTree = "<group>"; };
 		B3935A1398BE8EDD6AC27789 /* WFAlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WFAlertController.swift; sourceTree = "<group>"; };
 		B3935DF498026D2B755850A1 /* AlertWireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertWireframe.swift; sourceTree = "<group>"; };
+		B3935E0975C12062BB0305FC /* UIViewController+VisibleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+VisibleViewController.swift"; sourceTree = "<group>"; };
 		B4D89F8399437C1F82490536 /* WireframeProtocolsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WireframeProtocolsExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,6 +135,7 @@
 				1FFDDD911E9224F40003E8C4 /* Navigatable.h */,
 				AAD7B1971EC0AA6D00BB3844 /* NavBarConfigurable.h */,
 				B3935A1398BE8EDD6AC27789 /* WFAlertController.swift */,
+				B3935E0975C12062BB0305FC /* UIViewController+VisibleViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				B39353F31436A9C50853DF73 /* WFAlertController.swift in Sources */,
 				B39351E8D3445CF6A963C9BA /* AlertWireframe.swift in Sources */,
 				B39351833687C5DFF623BF17 /* SafariWireframe.swift in Sources */,
+				B3935830D52E563DE77FD6D0 /* UIViewController+VisibleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

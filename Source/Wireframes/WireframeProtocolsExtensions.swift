@@ -19,6 +19,12 @@ private struct NavigationState: NavigationStateInterface {
 		return self.globalCurrentlyActiveChildWireframeLeaf === otherNavigationState.globalCurrentlyActiveChildWireframeLeaf
 	}
 
+	func equals(currentApplicationViewStateWithRootViewController rootViewController: UIViewController) -> Bool {
+		let viewController1: UIViewController = self.globalCurrentlyActiveChildWireframeLeaf.viewController
+		let viewController2 = rootViewController.wf_visibleViewController
+		return viewController1 === viewController2
+	}
+
 	func didNavigateTo() {
 		globalCurrentlyActiveChildWireframeLeaf.didNavigateTo()
 	}
@@ -173,6 +179,7 @@ public extension WireframeInterface {
 	}
 
 	private func didNavigate(from fromNavigationState: NavigationStateInterface, to toNavigationState: NavigationStateInterface) {
+		assert(toNavigationState.equals(currentApplicationViewStateWithRootViewController: rootParentWireframe().viewController))
 		// skip notification if new leafChild was already visible before
 		if !fromNavigationState.equals(toNavigationState) {
 			toNavigationState.didNavigateTo()

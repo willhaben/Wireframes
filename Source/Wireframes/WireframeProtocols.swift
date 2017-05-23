@@ -69,6 +69,7 @@ public enum WireframeHandleNavigationCommandResult {
 public protocol NavigationStateInterface {
 
 	func equals(_ otherNavigationState: NavigationStateInterface) -> Bool
+	func equals(currentApplicationViewStateWithRootViewController rootViewController: UIViewController) -> Bool
 	func didNavigateTo()
 
 }
