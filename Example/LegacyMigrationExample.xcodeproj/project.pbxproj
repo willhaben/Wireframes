@@ -23,6 +23,7 @@
 		B393508A7AC01CD780DA374E /* ViperModuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39358B151B64FE37E96253E /* ViperModuleViewModel.swift */; };
 		B39350A6B314C0AEA3A7FD47 /* AdvancedLegacyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3935C14BB13F2DBEF29705A /* AdvancedLegacyViewController.m */; };
 		B3935298A4D9EC6894B3DA4C /* ViperModuleWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3935F23102CD26A33FFA3F3 /* ViperModuleWireframe.swift */; };
+		B39353A638CEA0D92E7FEF8F /* DismissBlockHavingExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = B39358D2FC038719DBE05908 /* DismissBlockHavingExtensions.m */; };
 		B39353A92FA86FB49B7406B1 /* StatefulNavigatableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3935906D54A23E2FD484D56 /* StatefulNavigatableViewController.m */; };
 		B393544EDE0729CD91272765 /* ViperModuleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3935CB78A4EB280963F3B7D /* ViperModuleViewController.swift */; };
 		B39355CB5138050EB79E6786 /* ViperModulePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3935115DE5ED6B1AF1A5BBF /* ViperModulePresenter.swift */; };
@@ -68,10 +69,13 @@
 		B3935115DE5ED6B1AF1A5BBF /* ViperModulePresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViperModulePresenter.swift; sourceTree = "<group>"; };
 		B3935220A7119006E2C44BD4 /* ComplexTestNavigationCommandChains.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplexTestNavigationCommandChains.swift; sourceTree = "<group>"; };
 		B3935222BA8CA9B7DBDF1A29 /* StatefulNavigatableViewController+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StatefulNavigatableViewController+Protected.h"; sourceTree = "<group>"; };
+		B393525D7256D8A2E718491E /* DismissBlockHavingExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DismissBlockHavingExtensions.h; sourceTree = "<group>"; };
+		B39352FEA1458BC08F6C3A57 /* DismissBlockHaving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DismissBlockHaving.h; sourceTree = "<group>"; };
 		B3935351FCFF4A98880A18E6 /* LoadingState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingState.h; sourceTree = "<group>"; };
 		B39355D620F7C7BF03A6B71E /* AdvancedLegacyViewControllerWireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedLegacyViewControllerWireframe.swift; sourceTree = "<group>"; };
 		B39358B151B64FE37E96253E /* ViperModuleViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViperModuleViewModel.swift; sourceTree = "<group>"; };
 		B39358BB88F5E46F029150C9 /* StatefulNavigatableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatefulNavigatableViewController.h; sourceTree = "<group>"; };
+		B39358D2FC038719DBE05908 /* DismissBlockHavingExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DismissBlockHavingExtensions.m; sourceTree = "<group>"; };
 		B3935906D54A23E2FD484D56 /* StatefulNavigatableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatefulNavigatableViewController.m; sourceTree = "<group>"; };
 		B3935A4476B96DFB716BCB08 /* ViperModuleInteractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViperModuleInteractor.swift; sourceTree = "<group>"; };
 		B3935A9778E3B06071EC6E48 /* WireframeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WireframeFactory.swift; sourceTree = "<group>"; };
@@ -131,6 +135,7 @@
 				B3935096905E672D94CB4F79 /* Helper */,
 				B3935EBE9AB21819EE9E3015 /* StatefulViewController */,
 				B39352E350B46189EB35297C /* ViperModule */,
+				B3935C572991333F196040E4 /* DismissWorkarounds */,
 			);
 			name = Source;
 			path = LegacyMigrationExample;
@@ -187,6 +192,16 @@
 				B3935A4476B96DFB716BCB08 /* ViperModuleInteractor.swift */,
 			);
 			path = Logic;
+			sourceTree = "<group>";
+		};
+		B3935C572991333F196040E4 /* DismissWorkarounds */ = {
+			isa = PBXGroup;
+			children = (
+				B39352FEA1458BC08F6C3A57 /* DismissBlockHaving.h */,
+				B393525D7256D8A2E718491E /* DismissBlockHavingExtensions.h */,
+				B39358D2FC038719DBE05908 /* DismissBlockHavingExtensions.m */,
+			);
+			path = DismissWorkarounds;
 			sourceTree = "<group>";
 		};
 		B3935CCF72501351DB9E7667 /* UI */ = {
@@ -329,6 +344,7 @@
 				B39350A6B314C0AEA3A7FD47 /* AdvancedLegacyViewController.m in Sources */,
 				B3935603127FA4FA4226F579 /* AdvancedLegacyViewControllerWireframe.swift in Sources */,
 				B39357F23E788C771880E29D /* WireframeFactory.swift in Sources */,
+				B39353A638CEA0D92E7FEF8F /* DismissBlockHavingExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

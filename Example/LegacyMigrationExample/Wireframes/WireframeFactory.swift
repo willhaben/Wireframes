@@ -1,5 +1,6 @@
 import Wireframes
 import SafariServices
+import MobileCoreServices
 
 
 private typealias TabBarWireframeCreation = WireframeFactory
@@ -10,6 +11,7 @@ private typealias MyVCCreation = WireframeFactory
 private typealias AlertCreation = WireframeFactory
 private typealias SharingCreation = WireframeFactory
 private typealias SafariCreation = WireframeFactory
+private typealias ImagePickerCreation = WireframeFactory
 
 
 class WireframeFactory: NSObject {
@@ -126,6 +128,22 @@ extension SafariCreation {
 	class func createSafariWireframe() -> SafariWireframe {
 		let safariVC = SFSafariViewController(url: URL(string: "https://github.com/willhaben/Wireframes")!)
 		let wireframe = SafariWireframe(safariViewController: safariVC)
+		return wireframe
+	}
+
+}
+
+
+extension ImagePickerCreation {
+
+	class func createImagePickerWireframe(delegate: UIImagePickerControllerDelegate & UINavigationControllerDelegate, dismissBlockConfiguration: (PresentableWireframeInterface, DismissBlockHaving) -> Void) -> ViewControllerWireframe {
+		let imagePickerController = UIImagePickerController()
+		imagePickerController.delegate = delegate
+		imagePickerController.sourceType = .photoLibrary
+		imagePickerController.mediaTypes = [String(kUTTypeImage)]
+		// UIImagePickerController is a UINavigationController subclass, but as it cannot use navigation commands internally, we need to put it into a ViewControllerWireframe
+		let wireframe = ViewControllerWireframe(viewController: imagePickerController)
+		dismissBlockConfiguration(wireframe, imagePickerController)
 		return wireframe
 	}
 

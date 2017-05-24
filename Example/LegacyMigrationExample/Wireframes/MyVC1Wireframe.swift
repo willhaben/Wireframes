@@ -112,4 +112,23 @@ class MyVCWireframe: ViewControllerWireframe {
 		dispatch(PresentationControllerNavigationCommand.present(wireframe: wireframe, modalPresentationStyle: .popover(configuration: .presentedFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: nil, popoverDidDismissByUserTappingOutsideBlock: nil)), modalTransitionStyle: .coverVertical, animated: true))
 	}
 
+	func presentImagePicker(sourceView: UIView, imagePickerDelegate: UIImagePickerControllerDelegate & UINavigationControllerDelegate) {
+		let wireframe = WireframeFactory.createImagePickerWireframe(delegate: imagePickerDelegate, dismissBlockConfiguration: { (wireframe: PresentableWireframeInterface, dismissBlockHaving: DismissBlockHaving) -> Void in
+			dismissBlockHaving.dismissBlock = { [weak wireframe] completion in
+				guard let wireframe = wireframe else {
+					assertionFailure()
+					return
+				}
+				wireframe.dispatch(PresentationControllerNavigationCommand.dismiss(wireframe: wireframe, animated: true), onComplete: completion)
+			}
+		})
+		assert(wireframe.viewController is DismissBlockHaving)
+		dispatch(PresentationControllerNavigationCommand.present(wireframe: wireframe, modalPresentationStyle: .popover(configuration: .presentedFromView(sourceView: sourceView, sourceRect: sourceView.bounds, permittedArrowDirections: .any, willRepositionPopoverToRectInViewBlock: nil, popoverDidDismissByUserTappingOutsideBlock: nil)), modalTransitionStyle: .coverVertical, animated: true))
+	}
+
+	func dismissImagePicker(_ picker: UIImagePickerController) {
+		assert(picker.dismissBlock != nil)
+		picker.dismissBlock?(nil)
+	}
+
 }

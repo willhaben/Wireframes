@@ -104,6 +104,7 @@ class MyVC: UIViewController, Navigatable {
 				createButton(title: "push legacy", action: { [weak self] _ in self?.wireframe?.pushLegacy() }),
 				createButton(title: "push viper", action: { [weak self] _ in self?.wireframe?.pushViper() }),
 				createButton(title: "present safari", action: { [weak self] sender in self?.wireframe?.presentSafari(sourceView: sender) }),
+				createButton(title: "present image picker", action: { [weak self] sender in if let strongSelf = self { strongSelf.wireframe?.presentImagePicker(sourceView: sender, imagePickerDelegate: strongSelf) } }),
 				createTextField(),
 		]
 	}
@@ -141,4 +142,18 @@ class MyVC: UIViewController, Navigatable {
 	}
 
 }
+
+extension MyVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+		wireframe?.dismissImagePicker(picker)
+	}
+
+	func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+		wireframe?.dismissImagePicker(picker)
+	}
+
+}
+
+
 
