@@ -142,7 +142,7 @@ extension ImagePickerCreation {
 		imagePickerController.sourceType = .photoLibrary
 		imagePickerController.mediaTypes = [String(kUTTypeImage)]
 		// UIImagePickerController is a UINavigationController subclass, but as it cannot use navigation commands internally, we need to put it into a ViewControllerWireframe
-		let wireframe = ViewControllerWireframe(viewController: imagePickerController)
+		let wireframe = ViewControllerWireframe(viewController: imagePickerController, hasUnmanagedSubViewControllers: true)
 		dismissBlockConfiguration(wireframe, imagePickerController)
 		return wireframe
 	}

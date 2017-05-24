@@ -13,6 +13,10 @@ open class AlertWireframe: NSObject, AlertWireframeInterface {
 		return false
 	}
 
+	public var hasUnmanagedSubViewControllers: Bool {
+		return false
+	}
+
 	private var alertController: WFAlertController
 
 	public var viewController: UIViewController {

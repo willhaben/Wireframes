@@ -12,7 +12,12 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 		return presentedWireframe != nil
 	}
 
-	let _viewController: UIViewController
+	private let _hasUnmanagedSubViewControllers: Bool
+	public var hasUnmanagedSubViewControllers: Bool {
+		return _hasUnmanagedSubViewControllers
+	}
+
+	private let _viewController: UIViewController
 	public var viewController: UIViewController {
 		return _viewController
 	}
@@ -32,8 +37,9 @@ open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 		* do not use any presenting methods from it, rather use NavigationCommands for that
 		* do not set its `popoverPresentationController?.delegate` property, as this Wireframe needs the delegate calls to track the correct state
 	 */
-	public init(viewController: UIViewController) {
+	public init(viewController: UIViewController, hasUnmanagedSubViewControllers: Bool = false) {
 		self._viewController = viewController
+		self._hasUnmanagedSubViewControllers = hasUnmanagedSubViewControllers
 	}
 
 	public func handle(_ navigationCommand: NavigationCommand) -> WireframeHandleNavigationCommandResult {

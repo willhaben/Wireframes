@@ -20,7 +20,15 @@ private struct NavigationState: NavigationStateInterface {
 	}
 
 	func equals(currentApplicationViewStateWithRootViewController rootViewController: UIViewController) -> Bool {
-		let viewController1: UIViewController = self.globalCurrentlyActiveChildWireframeLeaf.viewController
+		let viewController1: UIViewController = {
+			let wireframe = self.globalCurrentlyActiveChildWireframeLeaf
+			if wireframe.hasUnmanagedSubViewControllers {
+				return wireframe.viewController.wf_visibleViewController
+			}
+			else {
+				return wireframe.viewController
+			}
+		}()
 		let viewController2 = rootViewController.wf_visibleViewController
 		return viewController1 === viewController2
 	}

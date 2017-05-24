@@ -19,6 +19,9 @@ public protocol WireframeInterface: class {
 
 	var isPresenting: Bool { get }
 
+	// some viewcontrollers might have subviewcontrollers without using wireframes for it, e.g. system viewcontrollers like UIImagePickerController
+	var hasUnmanagedSubViewControllers: Bool { get }
+
 	// unfortunately we need to give access to contained viewController
 	var viewController: UIViewController { get }
 

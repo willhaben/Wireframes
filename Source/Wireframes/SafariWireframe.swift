@@ -14,6 +14,10 @@ open class SafariWireframe: NSObject, SafariWireframeInterface {
 		return false
 	}
 
+	public var hasUnmanagedSubViewControllers: Bool {
+		return false
+	}
+
 	private var safariViewController: SFSafariViewController
 
 	public var viewController: UIViewController {

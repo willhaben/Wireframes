@@ -3,8 +3,8 @@ import Wireframes
 
 class ViperModuleWireframe: ViewControllerWireframe, ViperModuleProtocolsPresenterToWireframeInterface {
 
-	override init(viewController: UIViewController) {
-		super.init(viewController: viewController)
+	override init(viewController: UIViewController, hasUnmanagedSubViewControllers: Bool = false) {
+		super.init(viewController: viewController, hasUnmanagedSubViewControllers: hasUnmanagedSubViewControllers)
 	}
 
 	func pushViper() {

@@ -22,6 +22,10 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 		return false
 	}
 
+	public var hasUnmanagedSubViewControllers: Bool {
+		return false
+	}
+
 	public var viewController: UIViewController {
 		return tabBarController
 	}
