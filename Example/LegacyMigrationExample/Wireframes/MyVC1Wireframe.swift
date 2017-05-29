@@ -60,6 +60,17 @@ class MyVCWireframe: ViewControllerWireframe {
 		AppDelegate.shared.rootWireframe.dispatch(PresentationControllerNavigationCommand.presentActionSheet(wireframe: alertWF, popoverConfiguration: popoverConfiguration))
 	}
 
+	func presentStackedAlerts(title: String) {
+		let alertWF1 = WireframeFactory.createAlertWireframe(title: title + ".1", preferredStyle: .alert)
+		let alertWF2 = WireframeFactory.createAlertWireframe(title: title + ".2", preferredStyle: .alert)
+		let alertWF3 = WireframeFactory.createAlertWireframe(title: title + ".3", preferredStyle: .alert)
+		let command1 = PresentationControllerNavigationCommand.presentAlert(wireframe: alertWF1)
+		let command2 = PresentationControllerNavigationCommand.presentAlert(wireframe: alertWF2)
+		let command3 = PresentationControllerNavigationCommand.presentAlert(wireframe: alertWF3)
+		let commandChain = AnyNavigationCommandChain(navigationCommands: [command1, command2, command3])
+		AppDelegate.shared.rootWireframe.dispatch(commandChain)
+	}
+
 	func dismiss() {
 		dispatch(PresentationControllerNavigationCommand.dismiss(wireframe: self, animated: true))
 	}

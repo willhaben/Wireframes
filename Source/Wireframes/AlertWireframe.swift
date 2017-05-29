@@ -6,11 +6,11 @@ open class AlertWireframe: NSObject, AlertWireframeInterface {
 	public var parentWireframe: WireframeInterface? = nil
 
 	public var currentlyActiveChildWireframe: WireframeInterface? {
-		return nil
+		return presentedWireframe
 	}
 
 	public var isPresenting: Bool {
-		return false
+		return presentedWireframe != nil
 	}
 
 	public var hasUnmanagedSubViewControllers: Bool {
@@ -33,12 +33,64 @@ open class AlertWireframe: NSObject, AlertWireframeInterface {
 		return viewController.popoverPresentationController
 	}
 
+	fileprivate var presentedWireframe: AlertWireframeInterface? = nil
+
 	public init(alertController: WFAlertController) {
 		self.alertController = alertController
 	}
 
 	public func handle(_ navigationCommand: NavigationCommand) -> WireframeHandleNavigationCommandResult {
-		return .couldNotHandle
+		guard let navigationCommand = navigationCommand as? PresentationControllerNavigationCommand else {
+			return .couldNotHandle
+		}
+
+		let waiter = DumbWaiter()
+		switch navigationCommand {
+			case .presentAlert(let wireframe):
+				assert(wireframe.alertControllerStyle == .alert)
+				guard presentedWireframe == nil, (viewController.presentedViewController == nil || viewController.presentedViewController?.isBeingDismissed == true) else {
+					// presenting should be bubbled down to first wireframe that is not presenting anything - notice that viewController.presentedViewController returns any decendant presented viewcontroller, not just direct children
+					return .couldNotHandle
+				}
+				presentAlertWireframe(wireframe, completion: {
+					waiter.fulfil()
+				})
+			case .alertWasDismissed(let wireframe):
+				guard wireframe !== self else {
+					// dismissal should be carried out by presenting wireframe, so it can properly clear its presentedWireframe property => bubble up
+					return .couldNotHandle
+				}
+
+				assert(wireframe === presentedWireframe)
+
+				presentedWireframe = nil
+				waiter.fulfil()
+			case .present, .presentActionSheet, .dismiss, .popoverWasDismissedByUserTappingOutside, .activityViewControllerWasDismissed, .safariViewControllerIsBeingDismissed:
+				// only AlertWireframes can be presented on top of AlertWireframes
+				return .couldNotHandle
+		}
+
+		return .didHandle(completionWaiter: waiter)
+	}
+
+}
+
+private extension AlertWireframe {
+
+	func presentAlertWireframe(_ wireframe: AlertWireframeInterface, completion: @escaping () -> Void) {
+		guard wireframe.viewController is WFAlertController else {
+			assertionFailure("UIAlertController not supported, use WFAlertController")
+			// still need to call completion, as this method does not have any means to report an error
+			completion()
+			return
+		}
+
+		assert(wireframe.alertControllerStyle == .alert)
+		assert(viewController.presentedViewController == nil || viewController.presentedViewController?.isBeingDismissed == true, "do not directly use `present` methods on viewController instances")
+
+		presentedWireframe = wireframe
+		wireframe.parentWireframe = self
+		viewController.present(wireframe.viewController, animated: true, completion: completion)
 	}
 
 }
