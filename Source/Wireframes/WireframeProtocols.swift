@@ -81,6 +81,7 @@ public enum NavigatableInformingMode {
 
 	case skipWhenFromAndToAreEqual // skip notification if new leafChild was already visible before
 	case alwaysSkip
+	case alwaysInform
 
 	func shouldInformOfNavigation(from fromNavigationState: NavigationStateInterface, to toNavigationState: NavigationStateInterface) -> Bool {
 		switch self {
@@ -88,6 +89,8 @@ public enum NavigatableInformingMode {
 				return !fromNavigationState.equals(toNavigationState)
 			case .alwaysSkip:
 				return false
+			case .alwaysInform:
+				return true
 		}
 	}
 
