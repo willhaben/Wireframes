@@ -43,12 +43,12 @@ public extension WireframeInterface {
 
 	// first commands are bubbled up, then when at the top, bubbled down
 	// notice that commands will wait for execution of previous commands (e.g. due to uikit animations), don't dispatch any commands inbetween, or else it could mess up the view state
-	func dispatch(_ navigationCommandChain: NavigationCommandChain, onComplete: (() -> Void)? = nil) {
+	func dispatch(_ navigationCommandChain: NavigationCommandChain, onComplete: ((() -> Void)?) = nil, navigatableInformingMode: NavigatableInformingMode = .skipWhenFromAndToAreEqual) {
 		if let uikitNavigationCommand = navigationCommandChain as? UIKitNavigationCommand {
 			let currentState = currentNavigationState()
 			switch uikitNavigationCommand {
 				case .uikitDidChangeNavigationState(let previousNavigationState):
-					didNavigate(from: previousNavigationState, to: currentState)
+					didNavigate(from: previousNavigationState, to: currentState, navigatableInformingMode: navigatableInformingMode)
 			}
 			return
 		}
@@ -60,12 +60,12 @@ public extension WireframeInterface {
 			
 			// retain itself so it does not get deallocated early - have faith that waiter will be fulfilled eventually, otherwise we produce a leak
 			_ = waiter
-			
+
 			guard let strongSelf = self else {
 				return
 			}
 			let navigationStateAfter = strongSelf.currentNavigationState()
-			strongSelf.didNavigate(from: navigationStateBefore, to: navigationStateAfter)
+			strongSelf.didNavigate(from: navigationStateBefore, to: navigationStateAfter, navigatableInformingMode: navigatableInformingMode)
 		})
 	}
 
@@ -186,10 +186,9 @@ public extension WireframeInterface {
 		return .couldNotHandle
 	}
 
-	private func didNavigate(from fromNavigationState: NavigationStateInterface, to toNavigationState: NavigationStateInterface) {
+	private func didNavigate(from fromNavigationState: NavigationStateInterface, to toNavigationState: NavigationStateInterface, navigatableInformingMode: NavigatableInformingMode) {
 		assert(toNavigationState.equals(currentApplicationViewStateWithRootViewController: rootParentWireframe().viewController))
-		// skip notification if new leafChild was already visible before
-		if !fromNavigationState.equals(toNavigationState) {
+		if navigatableInformingMode.shouldInformOfNavigation(from: fromNavigationState, to: toNavigationState) {
 			toNavigationState.didNavigateTo()
 		}
 	}

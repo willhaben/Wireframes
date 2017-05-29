@@ -25,7 +25,7 @@ public protocol WireframeInterface: class {
 	// unfortunately we need to give access to contained viewController
 	var viewController: UIViewController { get }
 
-	func dispatch(_ navigationCommandChain: NavigationCommandChain, onComplete: (() -> Void)?)
+	func dispatch(_ navigationCommandChain: NavigationCommandChain, onComplete: (() -> Void)?, navigatableInformingMode: NavigatableInformingMode)
 	func handle(_ navigationCommand: NavigationCommand) -> WireframeHandleNavigationCommandResult
 
 	func currentNavigationState() -> NavigationStateInterface
@@ -74,5 +74,21 @@ public protocol NavigationStateInterface {
 	func equals(_ otherNavigationState: NavigationStateInterface) -> Bool
 	func equals(currentApplicationViewStateWithRootViewController rootViewController: UIViewController) -> Bool
 	func didNavigateTo()
+
+}
+
+public enum NavigatableInformingMode {
+
+	case skipWhenFromAndToAreEqual // skip notification if new leafChild was already visible before
+	case alwaysSkip
+
+	func shouldInformOfNavigation(from fromNavigationState: NavigationStateInterface, to toNavigationState: NavigationStateInterface) -> Bool {
+		switch self {
+			case .skipWhenFromAndToAreEqual:
+				return !fromNavigationState.equals(toNavigationState)
+			case .alwaysSkip:
+				return false
+		}
+	}
 
 }
