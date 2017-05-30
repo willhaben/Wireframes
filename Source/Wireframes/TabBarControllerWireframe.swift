@@ -1,6 +1,30 @@
 import UIKit
 
 
+public protocol TabBarControllerWireframeMiddleware: class {
+
+	// either execute defaultAction to pop to first viewcontroller in case the tab viewcontroller is a UINavigationController, or alternatively dispatch own actions
+	func userDidSelectCurrentlyActiveTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: () -> Void)
+
+	// either execute defaultAction to switch tab, or alternatively dispatch own actions
+	func userDidSelectOtherTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: () -> Void)
+
+}
+
+
+private class DefaultTabBarControllerWireframeMiddleware: TabBarControllerWireframeMiddleware {
+
+	func userDidSelectCurrentlyActiveTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: () -> Void) {
+		defaultAction()
+	}
+
+	func userDidSelectOtherTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: () -> Void) {
+		defaultAction()
+	}
+
+}
+
+
 open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterface {
 
 	weak public var parentWireframe: WireframeInterface? = nil
@@ -31,6 +55,7 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 	}
 
 	private let tabBarController: UITabBarController
+	fileprivate let userInteractionMiddleware: TabBarControllerWireframeMiddleware
 
 	// TODO animation
 	private var childWireframesAndTags: [(ViewControllerWireframeInterface, WireframeTag)] = [] {
@@ -48,8 +73,9 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 		* do not modify its `viewControllers` or `selected*` properties, rather use NavigationCommands for that
 		* do not use any presenting methods from it, rather use NavigationCommands for that
 	 */
-	public init(tabBarController: UITabBarController) {
+	public init(tabBarController: UITabBarController, userInteractionMiddleware: TabBarControllerWireframeMiddleware = DefaultTabBarControllerWireframeMiddleware()) {
 		self.tabBarController = tabBarController
+		self.userInteractionMiddleware = userInteractionMiddleware
 		super.init()
 
 		self.tabBarController.delegate = self
@@ -119,16 +145,16 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 
 		tabBarController.selectedViewController = wireframe.viewController
 	}
-
-	fileprivate func wireframe(for viewController: UIViewController) -> ViewControllerWireframeInterface? {
-		guard let (wireframe, _) = childWireframesAndTags.first(where: { (wireframe, _) in
+	
+	fileprivate func wireframeAndTag(for viewController: UIViewController) -> (ViewControllerWireframeInterface, WireframeTag)? {
+		guard let wireframeAndTag = childWireframesAndTags.first(where: { (wireframe, _) in
 			return wireframe.viewController === viewController
 		}) else {
 			assertionFailure()
 			return nil
 		}
 
-		return wireframe
+		return wireframeAndTag
 	}
 
 }
@@ -136,16 +162,33 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 extension TabBarControllerWireframe: UITabBarControllerDelegate {
 
 	public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-		// never let tabbarcontroller execute the switch, rather do it programmatically by dispatching navigation command in order to avoid uikitDidChangeNavigationState being dispatched too often when popToRootViewController is executed on a navigation controller
+		guard let (wireframe, tag) = self.wireframeAndTag(for: viewController) else {
+			assertionFailure()
+			return false
+		}
+
+		let didSelectCurrentlyActiveTab = viewController == tabBarController.selectedViewController
+
 		DispatchQueue.main.async {
-			if viewController == tabBarController.selectedViewController, let navWireframe = self.wireframe(for: viewController) as? NavigationControllerWireframe {
+			if didSelectCurrentlyActiveTab {
 				assert(viewController is UINavigationController)
-				navWireframe.dispatch(NavigationControllerNavigationCommand.popToFirstChild(animated: true))
+				self.userInteractionMiddleware.userDidSelectCurrentlyActiveTab(withTag: tag, selectedChildWireframe: wireframe, tabBarControllerWireframe: self, defaultAction: {
+					if let navWireframe = wireframe as? NavigationControllerWireframe {
+						navWireframe.dispatch(NavigationControllerNavigationCommand.popToFirstChild(animated: true))
+					}
+					else {
+						// do nothing
+					}
+				})
 			}
 			else {
-				self.dispatch(TabBarControllerNavigationCommand.switchTabToViewController(viewController: viewController))
+				self.userInteractionMiddleware.userDidSelectOtherTab(withTag: tag, selectedChildWireframe: wireframe, tabBarControllerWireframe: self, defaultAction: {
+					wireframe.dispatch(TabBarControllerNavigationCommand.switchTabToViewController(viewController: viewController))
+				})
 			}
 		}
+
+		// never let tabbarcontroller execute the switch, rather do it programmatically by dispatching navigation command in order to avoid uikitDidChangeNavigationState being dispatched too often when popToRootViewController is executed on a navigation controller
 		return false
 	}
 
