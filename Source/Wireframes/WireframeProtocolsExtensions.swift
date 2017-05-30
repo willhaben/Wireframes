@@ -96,6 +96,8 @@ public extension WireframeInterface {
 			wholeSequenceWaiter.fulfil()
 			return
 		}
+		
+		assert(Thread.callStackSymbols.filter({ $0.range(of: "viewDidLoad") != nil ? true : false }).isEmpty, "should not be called from `viewDidLoad`")
 
 		let result: WireframeHandleNavigationCommandResult = {
 			// first try globallyHandle, then if it did not work, try handle
