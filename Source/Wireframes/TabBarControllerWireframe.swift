@@ -4,21 +4,21 @@ import UIKit
 public protocol TabBarControllerWireframeMiddleware: class {
 
 	// either execute defaultAction to pop to first viewcontroller in case the tab viewcontroller is a UINavigationController, or alternatively dispatch own actions
-	func userDidSelectCurrentlyActiveTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: () -> Void)
+	func userDidSelectCurrentlyActiveTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: @escaping () -> Void)
 
 	// either execute defaultAction to switch tab, or alternatively dispatch own actions
-	func userDidSelectOtherTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: () -> Void)
+	func userDidSelectOtherTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: @escaping () -> Void)
 
 }
 
 
 private class DefaultTabBarControllerWireframeMiddleware: TabBarControllerWireframeMiddleware {
 
-	func userDidSelectCurrentlyActiveTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: () -> Void) {
+	func userDidSelectCurrentlyActiveTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: @escaping () -> Void) {
 		defaultAction()
 	}
 
-	func userDidSelectOtherTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: () -> Void) {
+	func userDidSelectOtherTab(withTag tag: WireframeTag, selectedChildWireframe: WireframeInterface, tabBarControllerWireframe: WireframeInterface, defaultAction: @escaping () -> Void) {
 		defaultAction()
 	}
 
