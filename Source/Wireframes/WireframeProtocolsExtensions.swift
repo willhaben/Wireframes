@@ -193,7 +193,7 @@ public extension WireframeInterface {
 		}
 	}
 
-	private func globalCurrentlyActiveChildWireframeLeaf() -> WireframeInterface {
+	func globalCurrentlyActiveChildWireframeLeaf() -> WireframeInterface {
 		let rootParent = rootParentWireframe()
 		let leafChild = rootParent.leafChildWireframe()
 		return leafChild
