@@ -16,6 +16,7 @@
 		1FFDDDAC1E9224F40003E8C4 /* TabBarControllerWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFDDD971E9224F40003E8C4 /* TabBarControllerWireframe.swift */; };
 		1FFDDDAD1E9224F40003E8C4 /* ViewControllerWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFDDD981E9224F40003E8C4 /* ViewControllerWireframe.swift */; };
 		1FFDDDAE1E9224F40003E8C4 /* WireframeProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFDDD991E9224F40003E8C4 /* WireframeProtocols.swift */; };
+		AAB271641EDEF28600715548 /* DispatchCallCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB271631EDEF28600715548 /* DispatchCallCheck.swift */; };
 		AAD7B1981EC0AA6D00BB3844 /* NavBarConfigurable.h in Headers */ = {isa = PBXBuildFile; fileRef = AAD7B1971EC0AA6D00BB3844 /* NavBarConfigurable.h */; };
 		B393504E77270D12533368F9 /* DumbWaiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B393537BD663E2C47514967F /* DumbWaiter.swift */; };
 		B39351833687C5DFF623BF17 /* SafariWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3935598BB9256DEC11804C5 /* SafariWireframe.swift */; };
@@ -49,6 +50,7 @@
 		1FFDDD971E9224F40003E8C4 /* TabBarControllerWireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarControllerWireframe.swift; sourceTree = "<group>"; };
 		1FFDDD981E9224F40003E8C4 /* ViewControllerWireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerWireframe.swift; sourceTree = "<group>"; };
 		1FFDDD991E9224F40003E8C4 /* WireframeProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WireframeProtocols.swift; sourceTree = "<group>"; };
+		AAB271631EDEF28600715548 /* DispatchCallCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchCallCheck.swift; sourceTree = "<group>"; };
 		AAD7B1971EC0AA6D00BB3844 /* NavBarConfigurable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavBarConfigurable.h; sourceTree = "<group>"; };
 		B393537BD663E2C47514967F /* DumbWaiter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DumbWaiter.swift; sourceTree = "<group>"; };
 		B3935598BB9256DEC11804C5 /* SafariWireframe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariWireframe.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				B393537BD663E2C47514967F /* DumbWaiter.swift */,
 				B3935DF498026D2B755850A1 /* AlertWireframe.swift */,
 				B3935598BB9256DEC11804C5 /* SafariWireframe.swift */,
+				AAB271631EDEF28600715548 /* DispatchCallCheck.swift */,
 			);
 			name = DefaultWireframes;
 			path = Wireframes;
@@ -277,6 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FFDDDAD1E9224F40003E8C4 /* ViewControllerWireframe.swift in Sources */,
+				AAB271641EDEF28600715548 /* DispatchCallCheck.swift in Sources */,
 				1FFDDDAC1E9224F40003E8C4 /* TabBarControllerWireframe.swift in Sources */,
 				1FFDDDAE1E9224F40003E8C4 /* WireframeProtocols.swift in Sources */,
 				1FFDDDA41E9224F40003E8C4 /* NavigationCommand.swift in Sources */,
