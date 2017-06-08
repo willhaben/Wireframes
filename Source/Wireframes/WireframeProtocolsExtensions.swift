@@ -48,7 +48,9 @@ public extension WireframeInterface {
 			let currentState = currentNavigationState()
 			switch uikitNavigationCommand {
 				case .uikitDidChangeNavigationState(let previousNavigationState):
-					didNavigate(from: previousNavigationState, to: currentState, navigatableInformingMode: navigatableInformingMode)
+					// unfortunately there is a case where the assertion fails, so we need to deactivate for this navigation command
+					// repro: present some navcontroller, push something on it, and press the back button - the system (iOS 10) will return UISnapshotModalViewController as presentedViewController which makes no sense, also we cannot modify the assertion to exclude that class as it is private
+					didNavigate(from: previousNavigationState, to: currentState, navigatableInformingMode: navigatableInformingMode, assertNavigationStateMatches: false)
 			}
 			return
 		}
@@ -188,8 +190,10 @@ public extension WireframeInterface {
 		return .couldNotHandle
 	}
 
-	private func didNavigate(from fromNavigationState: NavigationStateInterface, to toNavigationState: NavigationStateInterface, navigatableInformingMode: NavigatableInformingMode) {
-		assert(toNavigationState.equals(currentApplicationViewStateWithRootViewController: rootParentWireframe().viewController))
+	private func didNavigate(from fromNavigationState: NavigationStateInterface, to toNavigationState: NavigationStateInterface, navigatableInformingMode: NavigatableInformingMode, assertNavigationStateMatches: Bool = true) {
+		if assertNavigationStateMatches {
+			assert(toNavigationState.equals(currentApplicationViewStateWithRootViewController: rootParentWireframe().viewController))
+		}
 		if navigatableInformingMode.shouldInformOfNavigation(from: fromNavigationState, to: toNavigationState) {
 			toNavigationState.didNavigateTo()
 		}
