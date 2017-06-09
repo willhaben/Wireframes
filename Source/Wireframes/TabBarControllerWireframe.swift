@@ -95,7 +95,11 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 					return .couldNotHandle
 				}
 
-				showTab(index)
+				let waiter = DumbWaiter()
+				showTab(index, completion: {
+					waiter.fulfil()
+				})
+				return .didHandle(completionWaiter: waiter)
 
 			case .switchTabToViewController(let viewController):
 				guard let (wireframe, _) = childWireframesAndTags.first(where: { (wireframe, _) in
@@ -104,7 +108,11 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 					return .couldNotHandle
 				}
 
-				showTab(wireframe)
+				let waiter = DumbWaiter()
+				showTab(wireframe, completion: {
+					waiter.fulfil()
+				})
+				return .didHandle(completionWaiter: waiter)
 
 			case .cycleTabs:
 				guard let vcs = tabBarController.viewControllers, vcs.count > 0 else {
@@ -112,7 +120,11 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 					return .couldNotHandle
 				}
 
-				showTab((tabBarController.selectedIndex + 1) % vcs.count)
+				let waiter = DumbWaiter()
+				showTab((tabBarController.selectedIndex + 1) % vcs.count, completion: {
+					waiter.fulfil()
+				})
+				return .didHandle(completionWaiter: waiter)
 
 			case .replaceTabs(let wireframesAndTags, let selectedTag):
 				guard let wireframeAndTag = wireframesAndTags.first(where: { (wireframe, tag) in return tag.equals(selectedTag) }) else {
@@ -123,29 +135,39 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 				childWireframesAndTags = wireframesAndTags
 				let (wireframe, _) = wireframeAndTag
 				tabBarController.selectedViewController = wireframe.viewController
+				return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
 		}
-
-		return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
 	}
 
-	private func showTab(_ index: Int) {
-		guard let vcs = tabBarController.viewControllers, index < vcs.count else {
+	private func showTab(_ index: Int, completion: @escaping () -> Void) {
+		guard let vcs = tabBarController.viewControllers, index < vcs.count, index < childWireframesAndTags.count else {
 			assertionFailure("index out of bounds")
 			return
 		}
 
-		tabBarController.selectedIndex = index
+		let (wireframe, _) = childWireframesAndTags[index]
+
+		showTab(wireframe, completion: completion)
 	}
 
-	private func showTab(_ wireframe: ViewControllerWireframeInterface) {
+	private func showTab(_ wireframe: ViewControllerWireframeInterface, completion: @escaping () -> Void) {
 		guard tabBarController.viewControllers?.contains(wireframe.viewController) ?? false else {
 			assertionFailure("viewController not contained in tabBarController")
+			// still need to call completion, as this method does not have any means to report an error
+			completion()
 			return
 		}
 
-		tabBarController.selectedViewController = wireframe.viewController
+		let viewController = wireframe.viewController
+		tabBarController.selectedViewController = viewController
+
+		// workaround for tabs that are displayed for the first time where something immediately gets pushed
+		// TODO find a cleaner way
+		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
+			completion()
+		}
 	}
-	
+
 	fileprivate func wireframeAndTag(for viewController: UIViewController) -> (ViewControllerWireframeInterface, WireframeTag)? {
 		guard let wireframeAndTag = childWireframesAndTags.first(where: { (wireframe, _) in
 			return wireframe.viewController === viewController

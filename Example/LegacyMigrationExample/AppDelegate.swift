@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		window = UIWindow(frame:UIScreen.main.bounds)
 		window?.rootViewController = rootWireframe.viewController
-		rootWireframe.dispatch(TabBarControllerNavigationCommand.replaceTabs(wireframesAndTags: WireframeFactory.createRootTabBarChildWireframes(), selectedTag: RootTabWireframeTag.second))
+		rootWireframe.dispatch(TabBarControllerNavigationCommand.replaceTabs(wireframesAndTags: WireframeFactory.createRootTabBarChildWireframes(), selectedTag: RootTabWireframeTag.first))
 		window?.makeKeyAndVisible()
 
 		return true
