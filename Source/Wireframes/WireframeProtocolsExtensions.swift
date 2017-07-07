@@ -169,7 +169,7 @@ public extension WireframeInterface {
 						// nothing presented => nothing to dismiss
 						return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
 					}
-					guard let presentedWireframe = relativeRootPresenting.currentlyActiveChildWireframe as? ViewControllerWireframeInterface else {
+					guard let presentedWireframe = relativeRootPresenting.currentlyActiveChildWireframe as? PresentableWireframeInterface else {
 						assertionFailure("found wireframe with isPresenting == true, but no currentlyActiveChildWireframe")
 						// return didHandle as a safety net
 						return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
