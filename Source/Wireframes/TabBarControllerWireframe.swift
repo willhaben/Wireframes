@@ -27,7 +27,7 @@ private class DefaultTabBarControllerWireframeMiddleware: TabBarControllerWirefr
 
 open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterface {
 
-	weak public var parentWireframe: WireframeInterface? = nil
+	public weak var parentWireframe: WireframeInterface? = nil
 	public var currentlyActiveChildWireframe: WireframeInterface? {
 		let index = tabBarController.selectedIndex
 		guard index != NSNotFound else {

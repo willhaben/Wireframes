@@ -3,7 +3,7 @@ import UIKit
 
 open class ViewControllerWireframe: NSObject, ViewControllerWireframeInterface {
 
-	weak public var parentWireframe: WireframeInterface? = nil
+	public weak var parentWireframe: WireframeInterface? = nil
 	public var currentlyActiveChildWireframe: WireframeInterface? {
 		return presentedWireframe
 	}

@@ -4,7 +4,7 @@ import SafariServices
 
 open class SafariWireframe: NSObject, SafariWireframeInterface {
 
-	public var parentWireframe: WireframeInterface? = nil
+	public weak var parentWireframe: WireframeInterface? = nil
 
 	public var currentlyActiveChildWireframe: WireframeInterface? {
 		return nil

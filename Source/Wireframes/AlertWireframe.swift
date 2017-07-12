@@ -3,7 +3,7 @@ import UIKit
 
 open class AlertWireframe: NSObject, AlertWireframeInterface {
 
-	public var parentWireframe: WireframeInterface? = nil
+	public weak var parentWireframe: WireframeInterface? = nil
 
 	public var currentlyActiveChildWireframe: WireframeInterface? {
 		return presentedWireframe
