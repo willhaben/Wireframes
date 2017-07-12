@@ -180,6 +180,11 @@ private extension ViewControllerWireframe {
 
 		switch modalPresentationStyle {
 			case .popover(let popoverConfiguration):
+				let isLessThanIOS10 = UIDevice.current.systemVersion.compare("10.0.0", options: NSString.CompareOptions.numeric) == .orderedAscending
+				guard !(isLessThanIOS10 && wireframe.viewController is UIActivityViewController && UIDevice.current.userInterfaceIdiom == .phone) else {
+					// on iOS 9 on phone we don't get a popoverPresentationController for UIActivityViewController
+					break
+				}
 				configurePopover(configuration: popoverConfiguration, wireframe: wireframe)
 
 		case .fullScreen, .formSheet:
