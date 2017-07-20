@@ -203,7 +203,11 @@ extension NavigationControllerWireframe: UINavigationControllerDelegate {
 		// notice that this delegate method is called even when an interactive movement (back swipe) is started, and later aborted - should rather be called `mightShow viewController`
 		if let transitionCoordinator = navigationController.transitionCoordinator, transitionCoordinator.initiallyInteractive {
 			// interactive transition active => we need to wait until we are sure it's not cancelled
-			transitionCoordinator.notifyWhenInteractionEnds({ [weak self] context in
+			var counter = 0
+			transitionCoordinator.notifyWhenInteractionChanges({ [weak self] context in
+				counter += 1
+				assert(counter <= 1, "multiple calls to notifyWhenInteractionChanges not expected for UINavigationController animations, not yet supported")
+				assert(!context.isInterruptible, "interruptible UINavigationController animations not yet supported")
 				if context.isCancelled {
 					// interaction cancelled => nothing to do
 				}
