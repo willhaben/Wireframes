@@ -3,16 +3,16 @@ import UIKit
 
 // no need to expose viewControllers in a typed way, everything should run through the wireframe or childWireframes
 // unfortunately cannot completely prevent access to contained viewController, as parent wireframe or AppDelegate needs to access it
-public protocol TabBarControllerWireframeInterface: class, WireframeInterface, UITabBarControllerDelegate {}
-public protocol NavigationControllerWireframeInterface: class, ViewControllerWireframeInterface, UINavigationControllerDelegate {}
-public protocol ViewControllerWireframeInterface: class, WireframeInterface, PopoverWireframeInterface, NavigationChildWireframeInterface {}
-public protocol AlertWireframeInterface: class, WireframeInterface, PopoverWireframeInterface {
+public protocol TabBarControllerWireframeInterface: WireframeInterface, UITabBarControllerDelegate {}
+public protocol NavigationControllerWireframeInterface: ViewControllerWireframeInterface, UINavigationControllerDelegate {}
+public protocol ViewControllerWireframeInterface: WireframeInterface, PopoverWireframeInterface, NavigationChildWireframeInterface {}
+public protocol AlertWireframeInterface: WireframeInterface, PopoverWireframeInterface {
 	var alertControllerStyle: UIAlertControllerStyle { get }
 }
-public protocol SafariWireframeInterface: class, WireframeInterface, PopoverWireframeInterface {}
+public protocol SafariWireframeInterface: WireframeInterface, PopoverWireframeInterface {}
 public typealias PresentableWireframeInterface = WireframeInterface & PopoverWireframeInterface
 
-public protocol WireframeInterface: class {
+public protocol WireframeInterface: AnyObject {
 
 	weak var parentWireframe: WireframeInterface? { get set }
 	var currentlyActiveChildWireframe: WireframeInterface? { get }
