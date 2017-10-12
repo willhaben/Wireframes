@@ -108,6 +108,7 @@ public enum TabBarControllerNavigationCommand: NavigationCommand {
 	case switchTabToViewController(viewController: UIViewController)
 	case cycleTabs()
 	case replaceTabs(wireframesAndTags: [(ViewControllerWireframeInterface, WireframeTag)], selectedTag: WireframeTag)
+	case replaceTab(tagToReplace: WireframeTag, newWireframe: ViewControllerWireframeInterface)
 }
 
 public struct TabBarAndNavigationControllerNavigationCommandChain: NavigationCommandChain {

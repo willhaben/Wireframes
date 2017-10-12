@@ -136,6 +136,24 @@ open class TabBarControllerWireframe: NSObject, TabBarControllerWireframeInterfa
 				let (wireframe, _) = wireframeAndTag
 				tabBarController.selectedViewController = wireframe.viewController
 				return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
+
+			case .replaceTab(let tagToReplace, let newWireframe):
+				guard childWireframesAndTags.contains(where: { (wireframe, tag) in return tag.equals(tagToReplace) }) else {
+					assertionFailure("tagToReplace not contained in childWireframesAndTags")
+					return .couldNotHandle
+				}
+
+				let newChildWireframesAndTags: [(ViewControllerWireframeInterface, WireframeTag)] = childWireframesAndTags.map({ wireframeAndTag in
+					let (_, tag) = wireframeAndTag
+					if tag.equals(tagToReplace) {
+						return (newWireframe, tag)
+					}
+					else {
+						return wireframeAndTag
+					}
+				})
+				childWireframesAndTags = newChildWireframesAndTags
+				return .didHandle(completionWaiter: DumbWaiter.fulfilledWaiter())
 		}
 	}
 
