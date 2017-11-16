@@ -19,7 +19,7 @@ struct AnyNavigationCommandChain: NavigationCommandChain {
 struct PushSwitchPushCommandChain: NavigationCommandChain {
 
 	func navigationCommandSequence() -> NavigationCommandSequence {
-		let titles = Array("ABCDEFGHIJKLM".characters)
+		let titles = Array("ABCDEFGHIJKLM")
 		let wfs: [ViewControllerWireframe] = Array(titles.map({ WireframeFactory.createMyVCWireframe(title: String($0), configuration: { _ in }) }))
 		assert(titles.count >= 10)
 		// the pushes before switching tab cannot be animated - this is a UIKit bug - for more information see https://github.com/willhaben/Wireframes/issues/4
